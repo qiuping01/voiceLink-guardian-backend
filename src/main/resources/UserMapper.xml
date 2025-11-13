@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ping.voicelinkguardianbackend.mapper.UserMapper">
+
+    <resultMap id="BaseResultMap" type="com.ping.voicelinkguardianbackend.model.entity.User">
+            <id property="id" column="id" />
+            <result property="groupName" column="groupName" />
+            <result property="password" column="password" />
+            <result property="userRole" column="userRole" />
+            <result property="createTime" column="createTime" />
+            <result property="updateTime" column="updateTime" />
+            <result property="isDelete" column="isDelete" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,groupName,password,userRole,createTime,updateTime,
+        isDelete
+    </sql>
+</mapper>
