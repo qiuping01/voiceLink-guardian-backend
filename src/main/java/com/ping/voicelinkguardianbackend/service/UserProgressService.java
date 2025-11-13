@@ -1,4 +1,4 @@
-package com.ping.voicelinkguardianbackend.service.impl;
+package com.ping.voicelinkguardianbackend.service;
 
 import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.baomidou.mybatisplus.extension.service.IService;

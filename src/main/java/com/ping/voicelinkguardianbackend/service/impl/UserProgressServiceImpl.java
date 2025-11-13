@@ -3,6 +3,7 @@ package com.ping.voicelinkguardianbackend.service.impl;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.ping.voicelinkguardianbackend.mapper.UserProgressMapper;
+import com.ping.voicelinkguardianbackend.service.UserProgressService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class UserProgressServiceImpl extends ServiceImpl<UserProgressMapper, UserProgress>
-    implements UserProgressService{
+    implements UserProgressService {
 
 }
 
