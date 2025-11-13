@@ -17,11 +17,6 @@ public class UserVO implements Serializable {
     private String groupName;
 
     /**
-     * 密码
-     */
-    private String password;
-
-    /**
      * 用户角色：user/admin
      */
     private String userRole;

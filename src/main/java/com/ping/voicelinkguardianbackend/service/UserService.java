@@ -2,9 +2,12 @@ package com.ping.voicelinkguardianbackend.service;
 
 import com.ping.voicelinkguardianbackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.ping.voicelinkguardianbackend.model.vo.LoginUserVO;
+import com.ping.voicelinkguardianbackend.model.vo.UserProgressVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author 21877
@@ -43,4 +46,27 @@ public interface UserService extends IService<User> {
      */
     LoginUserVO getLoginUserVO(User user);
 
+    /**
+     * 获取当前的登录用户
+     *
+     * @param request HTTP请求对象
+     * @return 登录用户
+     */
+    User getLoginUser(HttpServletRequest request);
+
+    /**
+     * 获得脱敏后的用户进度信息
+     *
+     * @param progress 用户进度
+     * @return 脱敏后的用户
+     */
+    public UserProgressVO getUserProgressVO(UserProgress progress);
+
+    /**
+     * 获得脱敏后的用户进度信息列表
+     *
+     * @param userProgressList 用户列表
+     * @return 脱敏后的用户进度信息列表
+     */
+    public List<UserProgressVO> getUserProgressVOList(List<UserProgress> userProgressList) ;
 }

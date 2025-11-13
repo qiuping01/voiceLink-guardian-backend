@@ -1,7 +1,7 @@
 package com.ping.voicelinkguardianbackend.mapper;
 
-import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 
 /**
 * @author 21877

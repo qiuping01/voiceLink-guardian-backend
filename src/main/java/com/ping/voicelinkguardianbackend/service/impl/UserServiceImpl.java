@@ -1,13 +1,16 @@
 package com.ping.voicelinkguardianbackend.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.ping.voicelinkguardianbackend.exception.BusinessException;
 import com.ping.voicelinkguardianbackend.exception.ErrorCode;
 import com.ping.voicelinkguardianbackend.model.entity.User;
+import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.ping.voicelinkguardianbackend.model.enums.UserRoleEnum;
 import com.ping.voicelinkguardianbackend.model.vo.LoginUserVO;
+import com.ping.voicelinkguardianbackend.model.vo.UserProgressVO;
 import com.ping.voicelinkguardianbackend.service.UserService;
 import com.ping.voicelinkguardianbackend.mapper.UserMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -15,6 +18,10 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.ping.voicelinkguardianbackend.constant.UserConstant.USER_LOGIN_STATE;
 
@@ -115,6 +122,61 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         LoginUserVO loginUserVO = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUserVO);
         return loginUserVO;
+    }
+
+    /**
+     * 获取当前的登录用户
+     *
+     * @param request HTTP请求对象
+     * @return 登录用户
+     */
+    @Override
+    public User getLoginUser(HttpServletRequest request) {
+        // 1. 先判断是否已经登录
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        if (currentUser == null || currentUser.getId() == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        // 2. 从数据库查询（获取最新结果，追求的话性能上一步即可返回）
+        Long userId = currentUser.getId();
+        currentUser = this.getById(userId); // 数据库中的最新用户信息
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        return currentUser;
+    }
+
+    /**
+     * 获得脱敏后的用户进度信息
+     *
+     * @param progress 用户进度
+     * @return 脱敏后的用户
+     */
+    @Override
+    public UserProgressVO getUserProgressVO(UserProgress progress) {
+        if (progress == null) {
+            return null;
+        }
+        UserProgressVO userProgressVO = new UserProgressVO();
+        BeanUtils.copyProperties(progress, userProgressVO);
+        return userProgressVO;
+    }
+
+    /**
+     * 获得脱敏后的用户信息列表
+     *
+     * @param userProgressList 用户进度信息列表
+     * @return 脱敏后的用户进度信息列表
+     */
+    @Override
+    public List<UserProgressVO> getUserProgressVOList(List<UserProgress> userProgressList) {
+        if (CollUtil.isEmpty(userProgressList)) {
+            return new ArrayList<>();
+        }
+        return userProgressList.stream()
+                .map(this::getUserProgressVO)
+                .collect(Collectors.toList());
     }
 }
 

@@ -22,9 +22,14 @@ public class UserProgress implements Serializable {
     private Long id;
 
     /**
-     * 
+     * 组名id
      */
     private Long userId;
+
+    /**
+     * 组名
+     */
+    private String groupName;
 
     /**
      * 当前关卡

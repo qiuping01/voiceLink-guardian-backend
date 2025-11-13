@@ -14,7 +14,8 @@ create table user
 create table user_progress
 (
     id           bigint auto_increment comment 'id' primary key,
-    userId       bigint                             not null,
+    userId       bigint                             not null comment '组名id',
+    groupName    varchar(256)                       not null comment '组名',
     currentLevel int      default 0 comment '当前关卡',
     totalLevels  int      default 6 comment '总关卡数',
     createTime   datetime default CURRENT_TIMESTAMP not null comment '创建时间',

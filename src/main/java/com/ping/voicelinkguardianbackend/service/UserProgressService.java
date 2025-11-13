@@ -1,7 +1,10 @@
 package com.ping.voicelinkguardianbackend.service;
 
-import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
+
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author 21877
@@ -9,5 +12,28 @@ import com.baomidou.mybatisplus.extension.service.IService;
 * @createDate 2025-11-13 16:33:55
 */
 public interface UserProgressService extends IService<UserProgress> {
+
+    /**
+     * 获取关卡进度
+     *
+     * @param userId
+     * @return
+     */
+    UserProgress getOrCreateProgress(Long userId, String groupName);
+
+    /**
+     * 通关当前关卡
+     *
+     * @param userId
+     * @return
+     */
+    boolean passCurrentLevel(Long userId, String groupName);
+
+    /**
+     * 获取所有小组进度
+     *
+     * @return
+     */
+    List<Map<String,Object>> getAllGroupProgress();
 
 }
