@@ -27,7 +27,7 @@ public class User implements Serializable {
     private String groupName;
 
     /**
-     * 
+     * 密码
      */
     private String password;
 
