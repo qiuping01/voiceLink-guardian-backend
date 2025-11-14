@@ -178,6 +178,18 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
                 .map(this::getUserProgressVO)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public boolean userLogout(HttpServletRequest request) {
+        // 1. 先判断是否已登录
+        Object userObj = request.getSession().getAttribute(USER_LOGIN_STATE);
+        if (userObj == null) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "未登录");
+        }
+        // 2. 移除登录态
+        request.getSession().removeAttribute(USER_LOGIN_STATE);
+        return true;
+    }
 }
 
 

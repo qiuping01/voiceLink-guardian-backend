@@ -115,4 +115,17 @@ public class UserController {
         boolean b = userProgressService.passCurrentLevel(loginUser.getId(), loginUser.getGroupName());
         return ResultUtils.success(b);
     }
+
+    /**
+     * 用户注销
+     *
+     * @param request
+     * @return
+     */
+    @PostMapping("/logout")
+    public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
+        ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        boolean result = userService.userLogout(request);
+        return ResultUtils.success(result);
+    }
 }

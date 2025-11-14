@@ -2,15 +2,22 @@ package com.ping.voicelinkguardianbackend.cotroller;
 
 import com.ping.voicelinkguardianbackend.common.BaseResponse;
 import com.ping.voicelinkguardianbackend.common.ResultUtils;
+import com.ping.voicelinkguardianbackend.exception.BusinessException;
+import com.ping.voicelinkguardianbackend.exception.ErrorCode;
+import com.ping.voicelinkguardianbackend.exception.ThrowUtils;
+import com.ping.voicelinkguardianbackend.model.entity.User;
 import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
+import com.ping.voicelinkguardianbackend.model.enums.UserRoleEnum;
 import com.ping.voicelinkguardianbackend.model.vo.UserProgressVO;
 import com.ping.voicelinkguardianbackend.service.UserProgressService;
 import com.ping.voicelinkguardianbackend.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -26,14 +33,33 @@ public class TeacherController {
     @Resource
     private UserService userService;
 
+    /**
+     * 获取所有用户进度列表
+     *
+     * @return
+     */
     @GetMapping("/all-progress")
-    public BaseResponse<List<UserProgressVO>> getAllUserProgress() {
+    public BaseResponse<List<UserProgressVO>> getAllUserProgress(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        String userRole = loginUser.getUserRole();
+        ThrowUtils.throwIf(!UserRoleEnum.ADMIN.getValue().equals(userRole), ErrorCode.NO_AUTH_ERROR);
         // 1. 获取所有用户进度列表
         List<UserProgress> userProgressList = userProgressService.list();
-
         // 2. 转换为脱敏的VO列表
         List<UserProgressVO> progressVOList = userService.getUserProgressVOList(userProgressList);
-
         return ResultUtils.success(progressVOList);
+    }
+
+    /**
+     * 重置所有小组进度
+     */
+    @PostMapping("/delete-all-progress")
+    public BaseResponse<Boolean> deleteAllUserProgress(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        String userRole = loginUser.getUserRole();
+        ThrowUtils.throwIf(!UserRoleEnum.ADMIN.getValue().equals(userRole), ErrorCode.NO_AUTH_ERROR);
+        boolean remove = userProgressService.remove(null);
+        ThrowUtils.throwIf(!remove, new BusinessException(ErrorCode.SYSTEM_ERROR));
+        return ResultUtils.success(true);
     }
 }

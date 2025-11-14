@@ -10,17 +10,17 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
-* @author 21877
-* @description 针对表【user(用户)】的数据库操作Service
-* @createDate 2025-11-13 16:30:37
-*/
+ * @author 21877
+ * @description 针对表【user(用户)】的数据库操作Service
+ * @createDate 2025-11-13 16:30:37
+ */
 public interface UserService extends IService<User> {
 
     /**
      * 用户注册
      *
-     * @param groupName   用户账户
-     * @param password  用户密码
+     * @param groupName     用户账户
+     * @param password      用户密码
      * @param checkPassword 校验密码
      * @return 用户ID
      */
@@ -30,9 +30,9 @@ public interface UserService extends IService<User> {
     /**
      * 用户登录
      *
-     * @param groupName   用户账户
+     * @param groupName 用户账户
      * @param password  用户密码
-     * @param request      Http请求
+     * @param request   Http请求
      * @return 脱敏后的用户信息
      */
     LoginUserVO userLogin(String groupName, String password,
@@ -60,7 +60,7 @@ public interface UserService extends IService<User> {
      * @param progress 用户进度
      * @return 脱敏后的用户
      */
-    public UserProgressVO getUserProgressVO(UserProgress progress);
+    UserProgressVO getUserProgressVO(UserProgress progress);
 
     /**
      * 获得脱敏后的用户进度信息列表
@@ -68,5 +68,7 @@ public interface UserService extends IService<User> {
      * @param userProgressList 用户列表
      * @return 脱敏后的用户进度信息列表
      */
-    public List<UserProgressVO> getUserProgressVOList(List<UserProgress> userProgressList) ;
+    List<UserProgressVO> getUserProgressVOList(List<UserProgress> userProgressList);
+
+    boolean userLogout(HttpServletRequest request);
 }
