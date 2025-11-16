@@ -71,6 +71,24 @@ public class UserProgressServiceImpl extends ServiceImpl<UserProgressMapper, Use
     }
 
     /**
+     * 回到上一关
+     *
+     * @param userId
+     * @param groupName
+     * @return
+     */
+    @Override
+    public boolean backCurrentLevel(Long userId, String groupName) {
+        UserProgress progress = getOrCreateProgress(userId,  groupName);
+        if (progress.getCurrentLevel() < (progress.getTotalLevels()+1)) {
+            progress.setCurrentLevel(progress.getCurrentLevel() - 1);
+            userProgressMapper.updateById(progress);
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * 获取所有小组进度
      *
      * @return

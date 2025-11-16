@@ -10,7 +10,6 @@ public class VoiceLinkGuardianBackendApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(VoiceLinkGuardianBackendApplication.class, args);
-        System.out.println("Hello World!");
     }
 
 }

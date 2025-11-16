@@ -117,6 +117,20 @@ public class UserController {
     }
 
     /**
+     * 上一关
+     */
+    @PostMapping("/back-level")
+    public BaseResponse<Boolean> backLevel (HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+        if (loginUser == null) {
+            ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        }
+        boolean b = userProgressService.backCurrentLevel(loginUser.getId(),
+                loginUser.getGroupName());
+        return ResultUtils.success(b);
+    }
+
+    /**
      * 用户注销
      *
      * @param request

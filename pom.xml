@@ -96,7 +96,6 @@
                     <mainClass>
                         com.ping.voicelinkguardianbackend.VoiceLinkGuardianBackendApplication
                     </mainClass>
-                    <skip>true</skip>
                 </configuration>
                 <executions>
                     <execution>

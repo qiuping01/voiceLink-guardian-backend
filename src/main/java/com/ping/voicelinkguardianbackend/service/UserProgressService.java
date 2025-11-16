@@ -30,6 +30,14 @@ public interface UserProgressService extends IService<UserProgress> {
     boolean passCurrentLevel(Long userId, String groupName);
 
     /**
+     * 回退当前关卡
+     *
+     * @param userId
+     * @return
+     */
+    boolean backCurrentLevel(Long userId, String groupName);
+
+    /**
      * 获取所有小组进度
      *
      * @return
