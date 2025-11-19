@@ -3,26 +3,23 @@ package com.ping.voicelinkguardianbackend.cotroller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.ping.voicelinkguardianbackend.common.BaseResponse;
 import com.ping.voicelinkguardianbackend.common.ResultUtils;
-import com.ping.voicelinkguardianbackend.exception.BusinessException;
 import com.ping.voicelinkguardianbackend.exception.ErrorCode;
 import com.ping.voicelinkguardianbackend.exception.ThrowUtils;
 import com.ping.voicelinkguardianbackend.mapper.UserMapper;
+import com.ping.voicelinkguardianbackend.model.dto.DesignCenterRequest;
 import com.ping.voicelinkguardianbackend.model.dto.UserLoginRequest;
 import com.ping.voicelinkguardianbackend.model.dto.UserRegisterRequest;
 import com.ping.voicelinkguardianbackend.model.entity.User;
 import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.ping.voicelinkguardianbackend.model.vo.LoginUserVO;
 import com.ping.voicelinkguardianbackend.model.vo.UserProgressVO;
-import com.ping.voicelinkguardianbackend.model.vo.UserVO;
+import com.ping.voicelinkguardianbackend.service.DesignCenterService;
 import com.ping.voicelinkguardianbackend.service.UserProgressService;
 import com.ping.voicelinkguardianbackend.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-
-import static com.ping.voicelinkguardianbackend.constant.UserConstant.USER_LOGIN_STATE;
 
 /**
  * 用户接口
@@ -39,6 +36,9 @@ public class UserController {
 
     @Resource
     private UserProgressService userProgressService;
+
+    @Resource
+    private DesignCenterService designCenterService;
 
     /**
      * 用户注册
@@ -75,6 +75,7 @@ public class UserController {
         queryWrapper.eq("groupName", userAccount);
         User user = userMapper.selectOne(queryWrapper);
         userProgressService.getOrCreateProgress(user.getId(),userAccount);
+        designCenterService.getOrCreateDesignCenter(user.getId(), userAccount);
         // 5. 返回成功响应
         return ResultUtils.success(loginUserVO);
     }
@@ -142,4 +143,22 @@ public class UserController {
         boolean result = userService.userLogout(request);
         return ResultUtils.success(result);
     }
+
+    @PostMapping("/design")
+    public BaseResponse<Boolean> writeDesign(@RequestBody DesignCenterRequest designCenterRequest
+            ,HttpServletRequest request) {
+        ThrowUtils.throwIf(designCenterRequest == null,
+                ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        String coreScene = designCenterRequest.getCoreScene();
+        String presetVoiceCommand = designCenterRequest.getPresetVoiceCommand();
+        String systemResponseLogic = designCenterRequest.getSystemResponseLogic();
+        boolean result = designCenterService.writeDesignCenter(userId, groupName
+                , coreScene, presetVoiceCommand, systemResponseLogic);
+        return ResultUtils.success(result);
+    }
+
 }

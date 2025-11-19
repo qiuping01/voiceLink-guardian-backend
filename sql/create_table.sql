@@ -22,3 +22,17 @@ create table user_progress
     updateTime   datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
     isDelete     tinyint  default 0                 not null comment '是否删除'
 ) comment '用户进度';
+
+-- 蓝图设计中心表
+create table design_center
+(
+    id                  bigint auto_increment comment 'id' primary key,
+    userId              bigint                             not null comment '组名id',
+    groupName           varchar(256)                       not null comment '组名',
+    coreScene           varchar(512)                       not null comment '核心场景',
+    presetVoiceCommand  varchar(512)                       not null comment '预设语音指令',
+    systemResponseLogic varchar(512)                       not null comment '系统响应逻辑',
+    createTime          datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    updateTime          datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    isDelete            tinyint  default 0                 not null comment '是否删除'
+) comment '蓝图设计中心';
