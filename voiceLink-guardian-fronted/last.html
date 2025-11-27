@@ -1,0 +1,3477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>声联守护 - AIoT守护者训练营</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2c3e50;
+            --accent-color: #e74c3c;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --light-color: #ecf0f1;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        /* 头部样式 */
+        .game-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .mission-badge {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            background: var(--accent-color);
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .team-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .info-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+        
+        /* 进度条样式 */
+        .progress-container {
+            background: var(--light-color);
+            padding: 20px;
+        }
+        
+        .progress-bar {
+            background: #bdc3c7;
+            height: 12px;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(90deg, var(--success-color), #27ae60);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .levels {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+        
+        .level {
+            text-align: center;
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        
+        .level.active {
+            color: var(--secondary-color);
+            font-weight: bold;
+        }
+        
+        /* 内容区域样式 */
+        .game-content {
+            padding: 30px;
+            min-height: 500px;
+        }
+        
+        .level-content {
+            display: none;
+        }
+        
+        .level-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .mission-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--primary-color);
+        }
+        
+        .mission-objective {
+            background: #e8f4fc;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .checklist {
+            margin: 20px 0;
+        }
+        
+        .check-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .check-item input {
+            margin-right: 10px;
+        }
+        
+        .code-block {
+            background: var(--secondary-color);
+            color: var(--light-color);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        
+        /* 按钮样式 */
+        .game-controls {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 30px;
+            background: var(--light-color);
+            border-top: 1px solid #bdc3c7;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-prev {
+            background: #95a5a6;
+            color: white;
+        }
+        
+        .btn-next {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-complete {
+            background: var(--success-color);
+            color: white;
+        }
+        
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* 勋章样式 */
+        .badges-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .badge {
+            width: 80px;
+            height: 80px;
+            background: #bdc3c7;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .badge.unlocked {
+            background: linear-gradient(135deg, var(--warning-color), #e67e22);
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+        
+        .badge-icon {
+            font-size: 30px;
+            margin-bottom: 5px;
+        }
+        
+        /* 完成页面样式 */
+        .completion-screen {
+            text-align: center;
+            padding: 40px;
+        }
+        
+        .final-badge {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, var(--accent-color), #c0392b);
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+        }
+        
+        .achievement-stats {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        
+        /* 表单元素样式 */
+        .input-field {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin: 0 5px;
+        }
+        
+        .scene-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .scene-label {
+            margin-right: 10px;
+            font-weight: bold;
+            min-width: 120px;
+        }
+        
+        .system-response {
+            margin: 10px 0;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .db-status {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        .db-status.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .db-status.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        /* 表格样式 */
+        .design-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .design-table th, .design-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .design-table th {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+        
+        .design-table tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        
+        /* 选择题样式 */
+        .question-container {
+            margin: 15px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        
+        .option:hover {
+            background: #e9ecef;
+            border-color: var(--primary-color);
+        }
+        
+        .option.selected {
+            background: #e8f4fc;
+            border-color: var(--primary-color);
+        }
+        
+        .option input {
+            margin-right: 10px;
+        }
+        
+        /* 任务卡片样式 */
+        .task-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .task-title {
+            font-weight: bold;
+            color: var(--secondary-color);
+        }
+        
+        .task-status {
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .team-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .scene-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .scene-label {
+                margin-bottom: 5px;
+            }
+            
+            .levels {
+                font-size: 10px;
+            }
+            
+            .task-progress {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+
+        /* 图片样式 */
+        .guide-image {
+            max-width: 100%;
+            border-radius: 8px;
+            margin: 15px 0;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
+        }
+
+        .step-section {
+            margin-bottom: 30px;
+        }
+
+        .step-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .task-step {
+            margin-bottom: 15px;
+        }
+        
+        /* 评价表单样式 */
+        .evaluation-form {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid var(--accent-color);
+        }
+        
+        .rating-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        
+        .rating-item {
+            text-align: center;
+            flex: 1;
+            padding: 10px;
+        }
+        
+        .rating-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        .star {
+            font-size: 24px;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .star.active {
+            color: var(--warning-color);
+        }
+        
+        .feedback-section {
+            margin-top: 30px;
+        }
+        
+        .feedback-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: var(--secondary-color);
+            margin-bottom: 15px;
+        }
+        
+        .feedback-item {
+            margin-bottom: 20px;
+        }
+        
+        .feedback-label {
+            font-weight: bold;
+            margin-bottom: 8px;
+            display: block;
+        }
+        
+        .feedback-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+        }
+        
+        .feedback-input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+        }
+        
+        .evaluation-badge {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, var(--success-color), #27ae60);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+        
+        /* 空巢老人安全管理系统样式 */
+        .elderly-safety-system {
+            margin-top: 20px;
+            border: 2px solid var(--primary-color);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .elderly-safety-header {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: white;
+            padding: 15px;
+            text-align: center;
+        }
+        
+        .elderly-safety-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .elderly-safety-header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+        }
+        
+        .safety-system-container {
+            width: 100%;
+            background: white;
+            border-radius: 0 0 15px 15px;
+            overflow: hidden;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        /* 房屋外部视图 */
+        .house-exterior {
+            padding: 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+            min-height: 550px;
+        }
+        
+        .house-image {
+            width: 450px;
+            height: 350px;
+            position: relative;
+            margin-bottom: 25px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+            border: 3px solid #2c3e50;
+        }
+        
+        .house-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 20px;
+        }
+        
+        .house-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .door-overlay {
+            position: absolute;
+            bottom: 0px;
+            left: 128px;
+            width: 45px;
+            height: 37.5px;
+            background: rgba(139, 69, 19, 0.5);
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(139, 69, 19, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .door-overlay:hover {
+            background: rgba(160, 82, 45, 0.7);
+            color: #FFF;
+        }
+        
+        .instruction {
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #2c3e50;
+            background: rgba(255,255,255,0.7);
+            padding: 8px 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* 房屋内部俯视图 */
+        .house-interior {
+            display: none;
+            height: 100%;
+            padding: 20px;
+            background: #f5f5f5;
+            min-height: 550px;
+        }
+        
+        .floor-plan {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+        
+        .room {
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 15px;
+            text-align: center;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .room:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+        
+        .room i {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #3498db;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .room-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .back-button:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        /* 房间详情视图 */
+        .room-detail {
+            display: none;
+            height: 100%;
+            padding: 15px;
+            background: #f5f5f5;
+            position: relative;
+            padding-bottom: 180px;
+        }
+        
+        .room-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed #3498db;
+        }
+        
+        .room-header h2 {
+            color: #2c3e50;
+            font-size: 1.7rem;
+        }
+        
+        .room-header p {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            margin-top: 8px;
+        }
+        
+        .room-content {
+            display: flex;
+            height: calc(100% - 220px);
+            gap: 15px;
+            min-height: 350px;
+        }
+        
+        /* 侧边面板样式 */
+        .side-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            max-height: 100%;
+        }
+        
+        /* 房间图片容器 */
+        .room-image-container {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 4px solid #3498db;
+            padding: 12px;
+            min-height: 350px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .room-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 12px;
+            max-height: 100%;
+        }
+        
+        /* 交互区域样式 */
+        .interaction-area {
+            position: absolute;
+            bottom: 25px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 96%;
+            background: linear-gradient(135deg, #e8f4f8, #d4e7f7);
+            border-radius: 18px;
+            border: 4px solid #2980b9;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #2c3e50;
+            font-size: 1.1rem;
+            padding: 20px;
+            text-align: center;
+            height: 160px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+            z-index: 30;
+        }
+        
+        .interaction-area h3 {
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .interaction-area p {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: #34495e;
+            font-weight: 500;
+        }
+        
+        .interaction-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .interaction-button {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 20px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+        
+        .interaction-button:hover {
+            background: linear-gradient(135deg, #2980b9, #2471a3);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+        }
+        
+        .interaction-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .interaction-button i {
+            font-size: 1.1rem;
+        }
+        
+        /* 危险标记样式 */
+        .danger-arrow {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            z-index: 20;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .danger-arrow::before {
+            content: '➤';
+            font-size: 60px;
+            color: #ff0000;
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.6);
+            display: block;
+            transform: rotate(-45deg);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .danger-explanation {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #ff0000;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .danger-explanation h3 {
+            color: #ff0000;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .danger-explanation p {
+            color: #333;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+        
+        .danger-explanation ul {
+            margin-top: 8px;
+            padding-left: 18px;
+        }
+        
+        .danger-explanation li {
+            color: #333;
+            margin-bottom: 4px;
+            line-height: 1.4;
+        }
+
+        .question-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 12px;
+            text-align: center;
+        }
+
+        .question-box p {
+            color: #1565c0;
+            font-weight: bold;
+            font-size: 1rem;
+            margin: 0;
+        }
+        
+        /* 传感器选择区域 */
+        .sensor-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 12px;
+            width: 100%;
+        }
+        
+        .sensor-option {
+            width: 100%;
+            height: 70px;
+            background: white;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 8px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        
+        .sensor-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+        
+        .sensor-option i {
+            font-size: 1.7rem;
+            margin-bottom: 4px;
+            color: #3498db;
+        }
+        
+        .sensor-name {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .sensor-drop-zone {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 4px dashed #2ecc71;
+            border-radius: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(46, 204, 113, 0.15);
+            z-index: 25;
+            font-size: 0.9rem;
+            text-align: center;
+            padding: 5px;
+        }
+        
+        .success-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.3rem;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 100;
+            text-align: center;
+            animation: pop 0.5s;
+        }
+        
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .room-content {
+                flex-direction: column;
+                height: auto;
+                min-height: 500px;
+            }
+            
+            .room-image-container {
+                min-height: 300px;
+                order: -1;
+                margin-bottom: 15px;
+            }
+            
+            .side-panel {
+                max-height: 200px;
+            }
+            
+            .interaction-area {
+                position: relative;
+                bottom: auto;
+                left: auto;
+                transform: none;
+                width: 100%;
+                margin-top: 20px;
+                height: 150px;
+                padding: 15px;
+            }
+            
+            .interaction-buttons {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+            }
+            
+            .interaction-button {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .house-image {
+                width: 100%;
+                max-width: 400px;
+                height: 280px;
+            }
+        }
+
+        /* 任务锁定状态 */
+        .task-locked {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+        
+        .task-locked-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .task-unlock-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        /* 任务导航样式 */
+        .task-navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .task-nav-btn {
+            padding: 10px 20px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .task-nav-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .task-nav-btn.active {
+            background: var(--secondary-color);
+        }
+        
+        .task-content {
+            display: none;
+        }
+        
+        .task-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        /* 任务状态标签样式 */
+        .task-status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .status-inprogress {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-completed {
+            background-color: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        /* 过关确认样式 */
+        .level-completion {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.4);
+            display: none;
+        }
+        
+        .level-completion.show {
+            display: block;
+            animation: bounceIn 0.6s ease;
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .completion-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        
+        .completion-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .completion-message {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .completion-badge-preview {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4);
+        }
+        
+        /* 突出显示重要完成项 */
+        .highlight-completion {
+            font-size: 18px !important;
+            font-weight: bold !important;
+            background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+            color: white !important;
+            padding: 15px 20px !important;
+            border-radius: 10px !important;
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4) !important;
+            border: 2px solid #27ae60 !important;
+            margin: 15px 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .highlight-completion:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 20px rgba(46, 204, 113, 0.6) !important;
+        }
+        
+        .highlight-completion input {
+            transform: scale(1.3) !important;
+            margin-right: 15px !important;
+        }
+        
+        .highlight-completion label {
+            font-size: 18px !important;
+            font-weight: bold !important;
+            color: white !important;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.3) !important;
+        }
+        
+        /* 不同颜色的突出显示 */
+        .highlight-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22) !important;
+            border: 2px solid #e67e22 !important;
+            box-shadow: 0 5px 15px rgba(243, 156, 18, 0.4) !important;
+        }
+        
+        .highlight-warning:hover {
+            box-shadow: 0 8px 20px rgba(243, 156, 18, 0.6) !important;
+        }
+        
+        .highlight-info {
+            background: linear-gradient(135deg, #3498db, #2980b9) !important;
+            border: 2px solid #2980b9 !important;
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4) !important;
+        }
+        
+        .highlight-info:hover {
+            box-shadow: 0 8px 20px rgba(52, 152, 219, 0.6) !important;
+        }
+        
+        .highlight-purple {
+            background: linear-gradient(135deg, #9b59b6, #8e44ad) !important;
+            border: 2px solid #8e44ad !important;
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4) !important;
+        }
+        
+        .highlight-purple:hover {
+            box-shadow: 0 8px 20px rgba(155, 89, 182, 0.6) !important;
+        }
+
+        /* 第三关任务完成项突出样式 */
+        .highlight-task-completion {
+            font-size: 20px !important;
+            font-weight: bold !important;
+            background: linear-gradient(135deg, #2ecc71, #27ae60) !important;
+            color: white !important;
+            padding: 18px 22px !important;
+            border-radius: 12px !important;
+            box-shadow: 0 6px 18px rgba(46, 204, 113, 0.5) !important;
+            border: 3px solid #27ae60 !important;
+            margin: 20px 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .highlight-task-completion:hover {
+            transform: translateY(-4px) !important;
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.7) !important;
+        }
+        
+        .highlight-task-completion input {
+            transform: scale(1.5) !important;
+            margin-right: 18px !important;
+        }
+        
+        .highlight-task-completion label {
+            font-size: 20px !important;
+            font-weight: bold !important;
+            color: white !important;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.4) !important;
+        }
+        
+        /* 为任务二完成项使用不同颜色，以区分 */
+        .highlight-task-completion.task2 {
+            background: linear-gradient(135deg, #3498db, #2980b9) !important;
+            border: 3px solid #2980b9 !important;
+            box-shadow: 0 6px 18px rgba(52, 152, 219, 0.5) !important;
+        }
+        
+        .highlight-task-completion.task2:hover {
+            box-shadow: 0 10px 25px rgba(52, 152, 219, 0.7) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- 头部 -->
+        <div class="game-header">
+            <div class="mission-badge">S级任务</div>
+            <h1>声联守护·终极挑战</h1>
+            <p>空巢老人紧急呼救与安全监控系统</p>
+            
+            <div class="team-info">
+                <div class="info-item">
+                    <strong>小组:</strong> 
+                    <select class="input-field" id="group-select">
+                        <option value="">-- 请选择小组 --</option>
+                        <option value="第一组">第一组</option>
+                        <option value="第二组">第二组</option>
+                        <option value="第三组">第三组</option>
+                        <option value="第四组">第四组</option>
+                        <option value="第五组">第五组</option>
+                        <option value="第六组">第六组</option>
+                        <option value="第七组">第七组</option>
+                        <option value="第八组">第八组</option>
+                        <option value="第九组">第九组</option>
+                        <option value="第十组">第十组</option>
+                        <option value="第十一组">第十一组</option>
+                        <option value="第十二组">第十二组</option>
+                        <option value="第十三组">第十三组</option>
+                        <option value="第十四组">第十四组</option>
+                        <option value="第十五组">第十五组</option>
+                        <option value="第十六组">第十六组</option>
+                        <option value="第十七组">第十七组</option>
+                        <option value="第十八组">第十八组</option>
+                    </select>
+                </div>
+                <div class="info-item">
+                    <strong>指挥官:</strong> <span>刘燚娜老师</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据库状态提示 -->
+        <div id="db-status" class="db-status" style="display: none;"></div>
+
+        <!-- 进度条 -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="levels">
+                <div class="level active" data-level="1">情境与问题</div>
+                <div class="level" data-level="2">方案设计</div>
+                <div class="level" data-level="3">动手搭建</div>
+                <div class="level" data-level="4">成果展示</div>
+                <div class="level" data-level="5">总结拓展</div>
+                <div class="level" data-level="6">教学评价</div>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="game-content">
+            <!-- 关卡1: 情境与问题 -->
+            <div class="level-content active" id="level-1">
+                <div class="mission-card">
+                    <h2>第一关：情境与问题——为何需要"声联守护"</h2>
+                    <p><strong>任务目标:</strong> 理解项目的意义与价值，明确技术选型的理由。</p>
+                    
+                    <div class="mission-objective">
+                        <h3>行动指南:</h3>
+                        <p>1. 观看情境视频，思考：视频中老人面临的最大困境是什么？</p>
+                        <p>2. 与小队成员交流你的看法。</p>
+                    </div>
+                    
+                    <div class="question-container">
+                        <div class="question-text">思考与讨论：视频中老人面临的最大困境是什么？</div>
+                        <div class="options-container">
+                            <div class="option" id="option-a">
+                                <input type="radio" id="choice-a" name="question1" value="A">
+                                <label for="choice-a">A. 摔倒本身</label>
+                            </div>
+                            <div class="option" id="option-b">
+                                <input type="radio" id="choice-b" name="question1" value="B">
+                                <label for="choice-b">B. 摔倒后求救信号无法有效传递</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-objective">
+                        <h3>我们的使命:</h3>
+                        <p>构建一个能"听懂"老人呼救，并能立即向云端发送警报的智能系统。</p>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-1-completion">
+                    <div class="completion-icon">🎯</div>
+                    <div class="completion-title">第一关完成！</div>
+                    <div class="completion-message">您已成功理解项目意义，可以进入下一关</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">🔍</div>
+                            <div>洞察者</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：洞察者</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-1">
+                        <div>
+                            <div class="badge-icon">🔍</div>
+                            <div>洞察者</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡2: 方案设计 -->
+            <div class="level-content" id="level-2">
+                <div class="mission-card">
+                    <h2>第二关：方案设计——空巢老人智能安全系统设计方案</h2>
+                    <p><strong>任务目标:</strong> 为你的系统选定场景、设计功能，并规划技术路线。</p>
+                    
+                    <div class="mission-objective">
+                        <h3>行动指南:</h3>
+                        <p>请同学们选定一个生活场景，深入分析空巢老人在此可能遇到的困难与风险，并设计出能通过语音识别技术提供帮助的智能解决方案。</p>
+                    </div>
+                    
+                    <!-- 空巢老人安全管理系统 -->
+                    <div class="elderly-safety-system">
+                        <div class="elderly-safety-header">
+                            <h3><i class="fas fa-home"></i> 空巢老人安全管理系统</h3>
+                            <p>帮助您分析不同场景中的安全隐患，为系统设计提供参考</p>
+                        </div>
+                        
+                        <div class="safety-system-container">
+                            <!-- 房屋外部视图 -->
+                            <div class="house-exterior" id="houseExterior">
+                                <div class="house-image">
+                                    <img src="https://img.tukuppt.com/png_preview/00/04/45/oVwPXJXJWr.jpg!/fw/780" alt="卡通房屋">
+                                    <div class="door-overlay" id="frontDoor">
+                                        进入
+                                    </div>
+                                </div>
+                                <div class="instruction">
+                                    点击大门进入房屋内部，探索各个房间的安全隐患
+                                </div>
+                            </div>
+                            
+                            <!-- 房屋内部俯视图 -->
+                            <div class="house-interior" id="houseInterior">
+                                <button class="back-button" id="backToExterior">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <h2 style="text-align:center; margin-bottom:15px; color:#2c3e50;">房屋内部俯视图</h2>
+                                <div class="floor-plan">
+                                    <div class="room" id="livingRoom">
+                                        <i class="fas fa-couch"></i>
+                                        <div class="room-name">客厅</div>
+                                    </div>
+                                    <div class="room" id="kitchen">
+                                        <i class="fas fa-utensils"></i>
+                                        <div class="room-name">厨房</div>
+                                    </div>
+                                    <div class="room" id="bathroom">
+                                        <i class="fas fa-bath"></i>
+                                        <div class="room-name">卫生间</div>
+                                    </div>
+                                    <div class="room" id="bedroom">
+                                        <i class="fas fa-bed"></i>
+                                        <div class="room-name">卧室</div>
+                                    </div>
+                                </div>
+                                <div class="instruction">
+                                    点击任意房间查看该区域的安全隐患及解决方案
+                                </div>
+                            </div>
+                            
+                            <!-- 客厅详情 -->
+                            <div class="room-detail" id="livingRoomDetail">
+                                <button class="back-button" id="backToInterior1">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-couch"></i> 客厅安全分析</h2>
+                                    <p>"老人在客厅休息，最可能发生什么意外？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="livingRoomLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 客厅图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/abf405d1ef0e4dcc8a8cf07e7370e4fepreview.png~tplv-a9rns2rl98-downsize.png?rcl=021762856001220fdbddc03001b0b280000000000000019584e9a&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079080008&x-signature=uLfRQ%2FLoXawrkZ4cx5%2Fyt1E%2BLlY%3D" alt="客厅安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="livingRoomDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="livingRoomDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="livingRoomDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="livingRoomDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="livingRoomRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="livingRoomInteractionText">点击按钮标记客厅中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="livingRoomMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="livingRoomResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 厨房详情 -->
+                            <div class="room-detail" id="kitchenDetail">
+                                <button class="back-button" id="backToInterior2">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-utensils"></i> 厨房安全分析</h2>
+                                    <p>"厨房里有哪些容易被忽略的安全隐患？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="kitchenLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 厨房图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/9de9fb40f47a408490d73f5a7947b732preview.png~tplv-a9rns2rl98-image.png?rcl=021762855675356fdbddc03001b0b280000000000000019c365c8&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079079682&x-signature=mia6SndAOKpPgQzkfyg3zCpeJws%3D" alt="厨房安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="kitchenDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="kitchenDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="kitchenDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="kitchenDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="kitchenRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="kitchenInteractionText">点击按钮标记厨房中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="kitchenMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="kitchenResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 卫生间详情 -->
+                            <div class="room-detail" id="bathroomDetail">
+                                <button class="back-button" id="backToInterior3">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-bath"></i> 卫生间安全分析</h2>
+                                    <p>"卫生间是意外高发地，我们可以怎么预防？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="bathroomLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 卫生间图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/f02405fcc4624f728adc4b87214c6b03preview.png~tplv-a9rns2rl98-downsize.png?rcl=021762855888721fdbddc03001b0b280000000000000019bb8e69&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079079895&x-signature=6VhVXawz2ldXuD8e8erXLys30bI%3D" alt="卫生间安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="bathroomDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="bathroomDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="bathroomDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="bathroomDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="bathroomRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="bathroomInteractionText">点击按钮标记卫生间中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="bathroomMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="bathroomResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 卧室详情 -->
+                            <div class="room-detail" id="bedroomDetail">
+                                <button class="back-button" id="backToInterior4">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-bed"></i> 卧室安全分析</h2>
+                                    <p>"在卧室，我们如何关注老人的夜间安全？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="bedroomLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 卧室图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p9-flow-imagex-sign.byteimg.com/ocean-cloud-tos/c8fbfc4e0b3143ce8b0d0ad5a62fba24preview.png~tplv-a9rns2rl98-downsize.png?rcl=021762854527124fdbddc03001b0b28000000000000001973f38d&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079078535&x-signature=I2ynZ1FexyLbpUd2K%2FV3FaFGaJA%3D" alt="卧室安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="bedroomDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="bedroomDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="bedroomDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="bedroomDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="bedroomRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="bedroomInteractionText">点击按钮标记卧室中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="bedroomMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="bedroomResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 成功消息 -->
+                            <div class="success-message" id="successMessage">
+                                <i class="fas fa-check-circle"></i><br>
+                                成功安装传感器！
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist">
+                        <h3>系统设计蓝图:</h3>
+                        <div class="scene-item">
+                            <span class="scene-label">我们小组重点关注的场景是:</span> 
+                            <select class="input-field" id="scene-select">
+                                <option value="" selected disabled>-- 请选择场景 --</option>
+                                <option value="客厅">客厅</option>
+                                <option value="卧室">卧室</option>
+                                <option value="卫生间">卫生间</option>
+                                <option value="厨房">厨房</option>
+                            </select>
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">在该场景下，老人最可能遇到的风险是:</span> 
+                            <input type="text" class="input-field" id="risk-input" placeholder="例如: 摔倒、突发疾病">
+                        </div>
+                        
+                        <h4 class="mt-4">物联网三层架构设计:</h4>
+                        <table class="design-table">
+                            <thead>
+                                <tr>
+                                    <th>物联网三层架构</th>
+                                    <th>环节</th>
+                                    <th>我们的设计</th>
+                                    <th>注意事项</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2">感知层（信息采集）</td>
+                                    <td>老人在这种紧急情况下，最可能喊出的语音指令是:</td>
+                                    <td>
+                                        <input type="text" class="input-field" placeholder="指令1" id="cmd1">
+                                        <input type="text" class="input-field" placeholder="指令2" id="cmd2">
+                                    </td>
+                                    <td>指令应简短、顺口、不易误触发。</td>
+                                </tr>
+                                <tr>
+                                    <td>行空板收到求救信息后，发出什么语音安抚老人</td>
+                                    <td>
+                                        <input type="text" class="input-field" placeholder="播放语音" id="response-speech">
+                                    </td>
+                                    <td>本地响应可以让老人确认系统已启动，给予安全感。</td>
+                                </tr>
+                                <tr>
+                                    <td>网络层+应用层（信息传输与使用）</td>
+                                    <td>发送什么信息给家人或云平台</td>
+                                    <td><input type="text" class="input-field" placeholder="发送内容" id="cloud-data"></td>
+                                    <td>数据要包含最关键的信息，让远方监护人能快速了解情况。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="check-item mt-3 highlight-completion highlight-warning">
+                            <input type="checkbox" id="check2-1">
+                            <label for="check2-1">我们的设计蓝图已通过指挥官（老师）审核！</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-2-completion">
+                    <div class="completion-icon">📐</div>
+                    <div class="completion-title">第二关完成！</div>
+                    <div class="completion-message">您已成功设计空巢老人安全系统方案</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">📐</div>
+                            <div>设计师</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：设计师</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-2">
+                        <div>
+                            <div class="badge-icon">📐</div>
+                            <div>设计师</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡3: 动手搭建 -->
+            <div class="level-content" id="level-3">
+                <div class="mission-card">
+                    <h2>第三关：动手搭建——探究实施，联调系统</h2>
+                    <p><strong>任务目标:</strong> 编写程序实现语音识别功能，并将数据上传到云端。</p>
+                    
+                    <!-- 任务导航 -->
+                    <div class="task-navigation">
+                        <button class="task-nav-btn active" id="task1-nav">任务一：让行空板"学会听"</button>
+                        <button class="task-nav-btn" id="task2-nav">任务二：实现数据上云</button>
+                    </div>
+                    
+                    <!-- 任务一内容 -->
+                    <div class="task-content active" id="task1-content">
+                        <div class="task-card">
+                            <div class="task-header">
+                                <div class="task-title">任务一：编写程序，让行空板"学会听"</div>
+                                <div class="task-status">
+                                    <span class="task-status-badge status-inprogress" id="task1-status">进行中</span>
+                                </div>
+                            </div>
+                            <p>准确识别老人"救命啊"等求助指令，输出识别结果</p>
+                            
+                            <h4>行动指南:</h4>
+                            <div class="task-step">
+                                <p><strong>1.</strong> 连接行空板，在Mind+中打开"任务一"程序</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312353.png" alt="连接行空板" class="guide-image">
+                            </div>
+                            <div class="task-step">
+                                <p><strong>2.</strong> 参照《实验手册》，修改代码中的唤醒词和识别指令</p>
+                                <img src="https://cdn.nlark.com/yuque/0/2025/png/57681281/1763556066129-564bac4a-078b-4c18-a4d3-4da2cea5476d.png" alt="修改唤醒词和识别指令" class="guide-image">
+                            </div>
+                            <div class="task-step">
+                                <p><strong>3.</strong> 上传程序并测试！</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312125.png" alt="上传程序并测试" class="guide-image">
+                            </div>
+                            
+                            <div class="check-item mt-3 highlight-task-completion">
+                                <input type="checkbox" id="check3-1">
+                                <label for="check3-1">我们成功让行空板"听懂"了指令！</label>
+                            </div>
+                            
+                            <!-- 任务一完成提示 -->
+                            <div id="task1-complete-message" class="task-unlock-message" style="display: none;">
+                                <i class="fas fa-check-circle"></i> 恭喜！任务一已完成，现在可以开始任务二了！
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 任务二内容 -->
+                    <div class="task-content" id="task2-content">
+                        <div class="task-card task-locked" id="task2-card">
+                            <div class="task-locked-overlay">请先完成任务一</div>
+                            <div class="task-header">
+                                <div class="task-title">任务二：实现行空板数据上云</div>
+                                <div class="task-status">
+                                    <span class="task-status-badge" id="task2-status">锁定中</span>
+                                </div>
+                            </div>
+                            <p>将语音识别结果与传感器数据上传至Easy IoT平台，支持远程查看</p>
+                            
+                            <h4>行动指南:</h4>
+                            
+                            <div class="step-section">
+                                <div class="step-title">一、编写程序</div>
+                                <p>1. 在任务一的基础上，在左下角扩展"网络服务"界面，选择"MQTT"和"WI-FI"两项扩展</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311639.png" alt="网络服务扩展" class="guide-image">
+                                <p>2. 点击"返回"回到主界面，左侧积木栏中增加了"掌控"和"网络服务"两个积木。其中，"网络服务"又包括了"MQTT"和"WI-FI"两项扩展，在左侧网络服务中将图下程序块拖动到编程界面，修改WIFI名称密码。</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311094.png" alt="修改WIFI配置" class="guide-image">
+                            </div>
+                            
+                            <div class="step-section">
+                                <div class="step-title">二、搭建应用层平台</div>
+                                <p>1. 在学生素材文件夹，打开Easy Iot平台<br>
+                                   网址：<a href="https://iot.dfrobot.com.cn/index.html" target="_blank">https://iot.dfrobot.com.cn/index.html</a></p>
+                                
+                                <p>2. 点击工作间→登录账号→添加新的设备→需点击眼睛图标→显示相应信息</p>
+                                <img src="https://cdn.nlark.com/yuque/0/2025/png/57681281/1763556064420-d34d997f-5a22-40a6-96b7-a5155044ac10.png" alt="Easy IOT平台设置" class="guide-image">
+                                
+                                <p>3. 使用Easy Iot连接物联网，需要用到(图中标记的参数需要对应填入到mind+的MQTT初始化参数：<br>
+                                   iot_id、iot_pwd、话题（topic）</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311078.png" alt="MQTT参数" class="guide-image">
+                                
+                                <p>4. 完整程序如图所示</p>
+                                <img src="https://cdn.nlark.com/yuque/0/2025/png/57681281/1763556065189-54d8b2a9-33c7-4542-815d-139ed9ff8a22.png" alt="完整程序" class="guide-image">
+                            </div>
+                            
+                            <div class="step-section">
+                                <div class="step-title">四、刷入程序</div>
+                                <p>Mind+点击上传到设备，确认是否上传成功</p>
+                            </div>
+                            
+                            <div class="step-section">
+                                <div class="step-title">五、测试实验结果</div>
+                                <p>1. 说"你好小行（小新）"，进入唤醒状态。说对应的识别词，喇叭播放对应的回应词。</p>
+                                <p>2. 进入Easy IOT平台→点击查看详情→点击刷新→点击查看，查看是否已经收到对应的回应词，收到即实验成功！</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311010.png" alt="查看实验结果" class="guide-image">
+                            </div>
+                            
+                            <div class="check-item mt-3 highlight-task-completion task2">
+                                <input type="checkbox" id="check3-2" disabled>
+                                <label for="check3-2">我们成功将数据上传到云端！</label>
+                            </div>
+
+                            <!-- 挑战任务选择 -->
+                            <div class="step-section">
+                                <div class="step-title">六、挑战任务（选做）</div>
+                                <p>恭喜完成基础任务！现在可以选择一个进阶挑战来提升你的技能：</p>
+                                
+                                <div class="scene-item">
+                                    <span class="scene-label">选择挑战任务:</span> 
+                                    <select class="input-field" id="challenge-select">
+                                        <option value="" selected disabled>-- 请选择挑战任务 --</option>
+                                        <option value="challenge1">进阶挑战一（温湿度传感器火灾报警）</option>
+                                        <option value="challenge2">进阶挑战二（语音控制开关灯）</option>
+                                        <option value="challenge3">进阶挑战三（检测加速度值摔倒报警）</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- 挑战任务描述 -->
+                                <div id="challenge-descriptions" style="margin-top: 15px;">
+                                    <!-- 挑战一描述 -->
+                                    <div id="challenge1-desc" class="mission-objective" style="display: none;">
+                                        <h4>进阶挑战一：温湿度传感器火灾报警</h4>
+                                        <p><strong>任务描述:</strong> 使用K10自带的温湿度传感器，当检测到异常高温时自动触发火灾报警。</p>
+                                        <p><strong>实现步骤:</strong></p>
+                                        <ul>
+                                            <li>1. 在行空板板载传感器中选择读取温度（摄氏度）</li>
+                                            <li>2. 设置温度阈值（如35°C）</li>
+                                            <li>3. 当温度超过阈值时，自动发送火灾警报到云端</li>
+                                            <li>4. 行空板同时播放语音警告</li>
+                                        </ul>
+                                        <p><strong>参考程序:</strong></p>
+                                        <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312449.png" alt="温湿度传感器火灾报警程序" class="guide-image">
+                                    </div>
+                                    
+                                    <!-- 挑战二描述 -->
+                                    <div id="challenge2-desc" class="mission-objective" style="display: none;">
+                                        <h4>进阶挑战二：语音控制开关灯</h4>
+                                        <p><strong>任务描述:</strong> 实现通过语音指令控制LED灯的开关。</p>
+                                        <p><strong>实现步骤:</strong></p>
+                                        <ul>
+                                            <li>1. 点击左边行空板K10，找到LED控制模块，具体程序如下：</li>
+                                        </ul>
+                                        <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312331.png" alt="LED控制模块程序" class="guide-image">
+                                        <ul>
+                                            <li>2. 训练语音识别模块识别"开灯"、"关灯"指令</li>
+                                            <li>3. 根据语音指令控制LED灯状态</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <!-- 挑战三描述 -->
+                                    <div id="challenge3-desc" class="mission-objective" style="display: none;">
+                                        <h4>进阶挑战三：检测加速度值摔倒报警</h4>
+                                        <p><strong>任务描述:</strong> 利用行空板内置的加速度传感器检测老人摔倒动作。</p>
+                                        <p><strong>实现步骤:</strong></p>
+                                        <ul>
+                                            <li>1. 启用行空板内置的加速度传感器</li>
+                                            <li>2. 设置加速度阈值算法检测摔倒动作</li>
+                                            <li>3. 检测到摔倒时自动发送紧急求助信息</li>
+                                            <li>4. 结合语音识别实现双重保险</li>
+                                            <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511222327525.png" alt="加速度传感器程序" class="guide-image">
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="check-item mt-3 highlight-completion highlight-purple">
+                                    <input type="checkbox" id="check3-3" disabled>
+                                    <label for="check3-3">我们完成了选做的挑战任务！</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-3-completion">
+                    <div class="completion-icon">🔧</div>
+                    <div class="completion-title">第三关完成！</div>
+                    <div class="completion-message">您已成功搭建语音识别系统并实现数据上云</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">👂</div>
+                            <div>听觉专家</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：听觉专家 & 云端专家</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-3">
+                        <div>
+                            <div class="badge-icon">👂</div>
+                            <div>听觉专家</div>
+                        </div>
+                    </div>
+                    <div class="badge" id="badge-4">
+                        <div>
+                            <div class="badge-icon">☁️</div>
+                            <div>云端专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡4: 成果展示 -->
+            <div class="level-content" id="level-4">
+                <div class="mission-card">
+                    <h2>第四关：成果展示——授勋大殿</h2>
+                    <p><strong>任务目标:</strong> 向所有守护者展示你们的成果与智慧。</p>
+                    
+                    <div class="mission-objective">
+                        <h3>行动指南:</h3>
+                        <p>1. 成果展示：现场演示你的"声联守护"系统。</p>
+                        <p>2. 心得分享：分享闯关过程中最难忘的一个"Boss"（难题）以及你们是如何击败它的。</p>
+                    </div>
+                    
+                    <div class="checklist">
+                        <h3>项目总结:</h3>
+                        <div class="scene-item">
+                            <span class="scene-label">我们小组选择的是:</span> 
+                            <select class="input-field" id="final-scene">
+                                <option value="" selected disabled>-- 请选择场景 --</option>
+                                <option value="卧室">卧室</option>
+                                <option value="卫生间">卫生间</option>
+                                <option value="厨房">厨房</option>
+                                <option value="客厅">客厅</option>
+                            </select>
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">实现功能:</span> 
+                            <input type="text" class="input-field" id="final-function" placeholder="功能描述">
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">我们还添加了功能:</span> 
+                            <input type="text" class="input-field" id="final-extra" placeholder="额外功能">
+                        </div>
+                        
+                        <!-- 新增：最难Boss和解决方法 -->
+                        <div class="scene-item">
+                            <span class="scene-label">在闯关过程中，我们遇到最难的一个"Boss"（难题）是:</span> 
+                            <input type="text" class="input-field" id="final-boss" placeholder="描述难题">
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">我们通过:</span> 
+                            <input type="text" class="input-field" id="final-solution" placeholder="解决方法">
+                            <span>的方法最终击败了它！</span>
+                        </div>
+                        
+                        <div class="check-item mt-3 highlight-completion highlight-info">
+                            <input type="checkbox" id="check4-1">
+                            <label for="check4-1">我们成功完成了系统演示！</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-4-completion">
+                    <div class="completion-icon">🏆</div>
+                    <div class="completion-title">第四关完成！</div>
+                    <div class="completion-message">您已成功展示项目成果并分享心得</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">🏆</div>
+                            <div>展示专家</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：展示专家</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-5">
+                        <div>
+                            <div class="badge-icon">🏆</div>
+                            <div>展示专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡5: 总结拓展 -->
+            <div class="level-content" id="level-5">
+                <div class="completion-screen">
+                    <div class="final-badge">
+                        <div>
+                            <div style="font-size: 40px; margin-bottom: 10px;">🎓</div>
+                            <div>声联守护<br>终极勋章</div>
+                        </div>
+                    </div>
+                    
+                    <h2>恭喜！<span id="final-team-name">--</span>已成功完成所有挑战！</h2>
+                    <p>你们已成为合格的AIoT守护者，用技术传递温暖，守护空巢老人的安全！</p>
+                    
+                    <div class="achievement-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="badges-earned">0</div>
+                            <div class="stat-label">勋章获得</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="tasks-completed">0</div>
+                            <div class="stat-label">任务完成</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="challenges-beaten">0</div>
+                            <div class="stat-label">挑战击败</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-card mt-4">
+                        <h3>学习效果评估与反思</h3>
+                        
+                        <!-- 问题1 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">1. 通过本项目，我对人工智能语音识别与物联网技术的理解有了明显加深。</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="radio" id="q1-5" name="question1" value="5">
+                                    <label for="q1-5">非常同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-4" name="question1" value="4">
+                                    <label for="q1-4">同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-3" name="question1" value="3">
+                                    <label for="q1-3">一般</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-2" name="question1" value="2">
+                                    <label for="q1-2">不同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-1" name="question1" value="1">
+                                    <label for="q1-1">非常不同意</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题2 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">2. 我能够清晰地描述"声联守护"系统中感知层、网络层、应用层各自的作用。</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="radio" id="q2-5" name="question2" value="5">
+                                    <label for="q2-5">非常同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-4" name="question2" value="4">
+                                    <label for="q2-4">同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-3" name="question2" value="3">
+                                    <label for="q2-3">一般</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-2" name="question2" value="2">
+                                    <label for="q2-2">不同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-1" name="question2" value="1">
+                                    <label for="q2-1">非常不同意</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题3 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">3. 在完成本项目后，我掌握或提升了以下哪些技能？（可多选）</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="checkbox" id="skill1" name="skills" value="mindplus">
+                                    <label for="skill1">使用Mind+进行图形化编程</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill2" name="skills" value="speech">
+                                    <label for="skill2">配置和使用语音识别模块</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill3" name="skills" value="mqtt">
+                                    <label for="skill3">理解并配置MQTT协议参数</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill4" name="skills" value="iot">
+                                    <label for="skill4">将硬件设备数据上传至云平台(Easy IoT)</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill5" name="skills" value="debug">
+                                    <label for="skill5">软硬件联调与故障排查</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill6" name="skills" value="teamwork">
+                                    <label for="skill6">团队协作与项目规划</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题4 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">4. 你认为课程中哪个环节挑战最大？</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="radio" id="challenge1" name="challenge" value="design">
+                                    <label for="challenge1">方案设计（将想法转化为具体方案）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge2" name="challenge" value="speech">
+                                    <label for="challenge2">语音识别程序编写与调试</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge3" name="challenge" value="mqtt">
+                                    <label for="challenge3">MQTT参数配置与联网</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge4" name="challenge" value="debug">
+                                    <label for="challenge4">软硬件联合调试</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge5" name="challenge" value="none">
+                                    <label for="challenge5">没有特别困难的环节</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题5 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">5. 如果可以为"声联守护"系统增加一项新功能，你希望是什么？（例如：自动拨打求救电话、增加环境传感器(烟雾、煤气)、能用语音聊天陪伴老人等）</label>
+                            <textarea class="feedback-input" rows="3" id="new-feature" placeholder="请描述你希望增加的新功能..."></textarea>
+                        </div>
+                        
+                        <!-- 问题6 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">6. 通过本节课，你对"技术服务于人"的理解有哪些新的收获？</label>
+                            <textarea class="feedback-input" rows="3" id="value-insight" placeholder="分享你的理解..."></textarea>
+                        </div>
+                        
+                        <div class="check-item mt-3 highlight-completion highlight-warning">
+                            <input type="checkbox" id="check5-1">
+                            <label for="check5-1">我已完成学习效果评估与反思！</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-card mt-4">
+                        <h4>指挥官寄语:</h4>
+                        <p style="font-style: italic;">
+                            技术是冰冷的，但你们赋予它的设计与关怀，让它拥有了温度。
+                            感谢每一位守护者的努力，你们不仅是技术的掌控者，更是温暖的传递者！
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-5-completion">
+                    <div class="completion-icon">🤔</div>
+                    <div class="completion-title">第五关完成！</div>
+                    <div class="completion-message">您已完成课程总结与反思</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">🤔</div>
+                            <div>反思者</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：反思者</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-6">
+                        <div>
+                            <div class="badge-icon">🤔</div>
+                            <div>反思者</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡6: 教学评价 -->
+            <div class="level-content" id="level-6">
+                <div class="completion-screen">
+                    <div class="evaluation-badge">
+                        <div>
+                            <div style="font-size: 40px; margin-bottom: 5px;">⭐</div>
+                            <div>教学评价</div>
+                        </div>
+                    </div>
+                    
+                    <h2>教学评价与反馈</h2>
+                    <p>请对本次课程的教学质量进行评价，帮助我们不断改进教学方法和内容</p>
+                    
+                    <div class="evaluation-form">
+                        <h3>教学评价表</h3>
+                        
+                        <div class="rating-container">
+                            <div class="rating-item">
+                                <div class="rating-label">教学内容设计</div>
+                                <div class="rating-stars" id="content-design-rating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                            </div>
+                            
+                            <div class="rating-item">
+                                <div class="rating-label">教学方法与指导</div>
+                                <div class="rating-stars" id="teaching-method-rating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                            </div>
+                            
+                            <div class="rating-item">
+                                <div class="rating-label">实践环节安排</div>
+                                <div class="rating-stars" id="practice-arrangement-rating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-section">
+                            <div class="feedback-title">详细反馈</div>
+                            
+                            <div class="feedback-item">
+                                <label class="feedback-label">您认为本课程的教学有哪些优点？</label>
+                                <textarea class="feedback-input" rows="3" id="teaching-advantages" placeholder="请分享您的看法..."></textarea>
+                            </div>
+                            
+                            <div class="feedback-item">
+                                <label class="feedback-label">您认为本课程的教学有哪些可以改进的地方？</label>
+                                <textarea class="feedback-input" rows="3" id="teaching-improvements" placeholder="请提出您的建议..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="check-item mt-4">
+                            <input type="checkbox" id="check6-1">
+                            <label for="check6-1">我已认真完成教学评价！</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-card mt-4">
+                        <h4>感谢您的反馈！</h4>
+                        <p>您的评价将帮助我们不断改进教学内容与教学方法，为更多学生提供优质的学习体验。</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button class="btn btn-complete" onclick="restartGame()">重新开始挑战</button>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-6-completion">
+                    <div class="completion-icon">📝</div>
+                    <div class="completion-title">第六关完成！</div>
+                    <div class="completion-message">您已完成教学评价与反馈</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">📝</div>
+                            <div>评价者</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：评价者</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-7">
+                        <div>
+                            <div class="badge-icon">📝</div>
+                            <div>评价者</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 控制按钮 -->
+        <div class="game-controls">
+            <button class="btn btn-prev" id="prev-btn" onclick="prevLevel()">上一关</button>
+            <button class="btn btn-next" id="next-btn" onclick="nextLevel()">下一关</button>
+        </div>
+    </div>
+
+    <script>
+        // 游戏状态
+        let currentLevel = 1;
+        const totalLevels = 6;
+        const badges = [
+            { id: 1, name: "洞察者", icon: "🔍", earned: false },
+            { id: 2, name: "设计师", icon: "📐", earned: false },
+            { id: 3, name: "听觉专家", icon: "👂", earned: false },
+            { id: 4, name: "云端专家", icon: "☁️", earned: false },
+            { id: 5, name: "展示专家", icon: "🏆", earned: false },
+            { id: 6, name: "反思者", icon: "🤔", earned: false },
+            { id: 7, name: "评价者", icon: "📝", earned: false }
+        ];
+
+        // 初始化游戏
+        function initGame() {
+            updateProgress();
+            updateNavigation();
+            loadGameState();
+            
+            // 监听小组选择变化
+            document.getElementById('group-select').addEventListener('change', saveGameState);
+            
+            // 监听所有输入框变化
+            document.querySelectorAll('input, select, textarea').forEach(input => {
+                input.addEventListener('input', saveGameState);
+                input.addEventListener('change', saveGameState);
+            });
+            
+            // 监听单选按钮变化
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // 更新选项的视觉状态
+                    document.querySelectorAll('.option').forEach(option => {
+                        option.classList.remove('selected');
+                    });
+                    if (this.checked) {
+                        this.closest('.option').classList.add('selected');
+                    }
+                    
+                    saveGameState();
+                    updateNavigation();
+                    updateLevelCompletion();
+                });
+            });
+            
+            // 监听第三关任务状态变化
+            document.getElementById('check3-1').addEventListener('change', function() {
+                updateTaskStatus();
+                if (this.checked) {
+                    unlockTask2();
+                }
+                updateLevelCompletion();
+            });
+            document.getElementById('check3-2').addEventListener('change', function() {
+                updateTaskStatus();
+                updateLevelCompletion();
+            });
+
+            // 监听挑战任务选择变化
+            document.getElementById('challenge-select').addEventListener('change', function() {
+                // 隐藏所有挑战描述
+                document.querySelectorAll('#challenge-descriptions > div').forEach(desc => {
+                    desc.style.display = 'none';
+                });
+                
+                // 显示选中的挑战描述
+                const selectedChallenge = this.value;
+                if (selectedChallenge) {
+                    document.getElementById(`${selectedChallenge}-desc`).style.display = 'block';
+                    document.getElementById('check3-3').disabled = false;
+                }
+                
+                saveGameState();
+            });
+
+            // 监听挑战任务完成状态
+            document.getElementById('check3-3').addEventListener('change', function() {
+                updateLevelCompletion();
+                saveGameState();
+            });
+            
+            // 监听所有复选框变化
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    updateLevelCompletion();
+                });
+            });
+            
+            // 初始化任务导航
+            initTaskNavigation();
+            
+            // 初始化星级评分
+            initStarRatings();
+            
+            // 初始化空巢老人安全管理系统
+            initRoomSystem();
+            
+            // 初始更新关卡完成状态
+            updateLevelCompletion();
+        }
+
+        // 初始化任务导航
+        function initTaskNavigation() {
+            const task1Nav = document.getElementById('task1-nav');
+            const task2Nav = document.getElementById('task2-nav');
+            const task1Content = document.getElementById('task1-content');
+            const task2Content = document.getElementById('task2-content');
+            
+            task1Nav.addEventListener('click', function() {
+                task1Nav.classList.add('active');
+                task2Nav.classList.remove('active');
+                task1Content.classList.add('active');
+                task2Content.classList.remove('active');
+            });
+            
+            task2Nav.addEventListener('click', function() {
+                // 检查任务一是否完成
+                const task1Completed = document.getElementById('check3-1').checked;
+                if (task1Completed) {
+                    task2Nav.classList.add('active');
+                    task1Nav.classList.remove('active');
+                    task2Content.classList.add('active');
+                    task1Content.classList.remove('active');
+                } else {
+                    alert('请先完成任务一！');
+                }
+            });
+        }
+
+        // 解锁任务二
+        function unlockTask2() {
+            const task2Card = document.getElementById('task2-card');
+            const task2Checkbox = document.getElementById('check3-2');
+            const task1CompleteMessage = document.getElementById('task1-complete-message');
+            
+            // 解锁任务二
+            task2Card.classList.remove('task-locked');
+            task2Checkbox.disabled = false;
+            
+            // 显示任务一完成消息
+            task1CompleteMessage.style.display = 'block';
+            
+            // 更新任务状态
+            document.getElementById('task2-status').textContent = '进行中';
+            document.getElementById('task2-status').className = 'task-status-badge status-inprogress';
+            
+            // 自动切换到任务二
+            const task2Nav = document.getElementById('task2-nav');
+            const task1Nav = document.getElementById('task1-nav');
+            const task1Content = document.getElementById('task1-content');
+            const task2Content = document.getElementById('task2-content');
+            
+            task2Nav.classList.add('active');
+            task1Nav.classList.remove('active');
+            task2Content.classList.add('active');
+            task1Content.classList.remove('active');
+            
+            // 保存状态
+            saveGameState();
+            updateNavigation();
+        }
+
+        // 初始化空巢老人安全管理系统
+        function initRoomSystem() {
+            // 房间管理类
+            class RoomManager {
+                constructor(roomName) {
+                    this.roomName = roomName;
+                    this.currentDanger = 1;
+                    this.sensorsPlaced = 0;
+                    
+                    // 获取DOM元素
+                    this.markDangerBtn = document.getElementById(`${roomName}MarkDangerBtn`);
+                    this.resetBtn = document.getElementById(`${roomName}ResetBtn`);
+                    this.dangerArrow1 = document.getElementById(`${roomName}DangerArrow1`);
+                    this.dangerArrow2 = document.getElementById(`${roomName}DangerArrow2`);
+                    this.interactionText = document.getElementById(`${roomName}InteractionText`);
+                    this.leftPanel = document.getElementById(`${roomName}LeftPanel`);
+                    this.rightPanel = document.getElementById(`${roomName}RightPanel`);
+                    this.dropZone1 = document.getElementById(`${roomName}DropZone1`);
+                    this.dropZone2 = document.getElementById(`${roomName}DropZone2`);
+                    
+                    // 传感器数据
+                    this.danger1Sensors = this.getDanger1Sensors();
+                    this.danger2Sensors = this.getDanger2Sensors();
+                    
+                    // 绑定事件
+                    this.bindEvents();
+                }
+                
+                getDanger1Sensors() {
+                    // 每个房间的第一个危险场景传感器
+                    const sensors = {
+                        'livingRoom': [
+                            { name: '温度传感器', icon: 'fas fa-thermometer-half', correct: true },
+                            { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                            { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                        ],
+                        'kitchen': [
+                            // 厨房第一个危险区域：燃气泄漏
+                            { name: '燃气传感器', icon: 'fas fa-fire', correct: true },
+                            { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                            { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                        ],
+                        'bathroom': [
+                            { name: '水浸传感器', icon: 'fas fa-tint', correct: true },
+                            { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                            { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                        ],
+                        'bedroom': [
+                            { name: '智能夜灯', icon: 'fas fa-lightbulb', correct: true },
+                            { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                            { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                        ]
+                    };
+                    return sensors[this.roomName] || [];
+                }
+                
+                getDanger2Sensors() {
+                    // 每个房间的第二个危险场景传感器
+                    const sensors = {
+                        'livingRoom': [
+                            { name: '智能摄像头', icon: 'fas fa-video', correct: true },
+                            { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                            { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                        ],
+                        'kitchen': [
+                            // 厨房第二个危险区域：忘记关火导致干烧 - 使用火焰传感器
+                            { name: '火焰传感器', icon: 'fas fa-fire', correct: true },
+                            { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                            { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                        ],
+                        'bathroom': [
+                            { name: '电压传感器', icon: 'fas fa-bolt', correct: true },
+                            { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                            { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                        ],
+                        'bedroom': [
+                            { name: '压力床垫传感器', icon: 'fas fa-bed', correct: true },
+                            { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                            { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                        ]
+                    };
+                    return sensors[this.roomName] || [];
+                }
+                
+                bindEvents() {
+                    this.markDangerBtn.addEventListener('click', () => this.markDanger());
+                    this.resetBtn.addEventListener('click', () => this.reset());
+                    
+                    // 设置拖放区域
+                    [this.dropZone1, this.dropZone2].forEach(zone => {
+                        zone.addEventListener('dragover', (e) => {
+                            e.preventDefault();
+                            zone.style.border = '3px solid #3498db';
+                            zone.style.background = 'rgba(52, 152, 219, 0.2)';
+                        });
+                        
+                        zone.addEventListener('dragleave', () => {
+                            zone.style.border = '4px dashed #2ecc71';
+                            zone.style.background = 'rgba(46, 204, 113, 0.15)';
+                        });
+                        
+                        zone.addEventListener('drop', (e) => this.handleDrop(e, zone));
+                    });
+                }
+                
+                markDanger() {
+                    if (this.currentDanger === 1) {
+                        // 显示第一个危险区域
+                        this.dangerArrow1.style.display = 'block';
+                        this.dropZone1.style.display = 'flex';
+                        this.dropZone1.innerHTML = '';
+                        
+                        // 显示危险解释和传感器选择
+                        this.showDangerExplanation(this.rightPanel, 1);
+                        this.showSensorSelection(this.leftPanel, 1);
+                        
+                        // 更改按钮文本
+                        this.markDangerBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 标记下一个危险区域';
+                        this.currentDanger = 2;
+                        
+                        // 更新交互文本
+                        this.interactionText.textContent = '已标记第一个危险区域，请继续标记下一个';
+                        this.interactionText.style.fontWeight = 'bold';
+                        
+                    } else if (this.currentDanger === 2) {
+                        // 清除第一个危险区域的内容
+                        this.leftPanel.innerHTML = '';
+                        this.rightPanel.innerHTML = '';
+                        
+                        // 显示第二个危险区域
+                        this.dangerArrow2.style.display = 'block';
+                        this.dropZone2.style.display = 'flex';
+                        this.dropZone2.innerHTML = '';
+                        
+                        // 显示危险解释和传感器选择
+                        this.showDangerExplanation(this.leftPanel, 2);
+                        this.showSensorSelection(this.rightPanel, 2);
+                        
+                        // 更改按钮文本
+                        this.markDangerBtn.innerHTML = '<i class="fas fa-check"></i> 完成';
+                        this.currentDanger = 3;
+                        
+                        // 更新交互文本
+                        this.interactionText.textContent = '已标记第二个危险区域，点击完成结束标记';
+                        this.interactionText.style.fontWeight = 'bold';
+                        
+                    } else {
+                        // 完成所有危险标记
+                        this.markDangerBtn.disabled = true;
+                        this.interactionText.textContent = '🎉 所有危险区域已标记完成！';
+                        this.interactionText.style.fontWeight = 'bold';
+                        this.interactionText.style.color = '#27ae60';
+                    }
+                }
+                
+                reset() {
+                    // 隐藏所有危险标记
+                    this.dangerArrow1.style.display = 'none';
+                    this.dangerArrow2.style.display = 'none';
+                    this.dropZone1.style.display = 'none';
+                    this.dropZone2.style.display = 'none';
+                    
+                    // 清空传感器放置区域内容
+                    this.dropZone1.innerHTML = '';
+                    this.dropZone2.innerHTML = '';
+                    
+                    // 清除面板内容
+                    this.leftPanel.innerHTML = '';
+                    this.rightPanel.innerHTML = '';
+                    
+                    // 重置按钮文本
+                    this.markDangerBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 标记危险区域';
+                    this.markDangerBtn.disabled = false;
+                    
+                    // 重置状态
+                    this.currentDanger = 1;
+                    this.sensorsPlaced = 0;
+                    this.interactionText.textContent = `点击按钮标记${this.getRoomChineseName()}中的危险区域`;
+                    this.interactionText.style.fontSize = '1rem';
+                    this.interactionText.style.fontWeight = '500';
+                    this.interactionText.style.color = '#34495e';
+                }
+                
+                getRoomChineseName() {
+                    const names = {
+                        'livingRoom': '客厅',
+                        'kitchen': '厨房', 
+                        'bathroom': '卫生间',
+                        'bedroom': '卧室'
+                    };
+                    return names[this.roomName] || '房间';
+                }
+                
+                showDangerExplanation(panel, dangerNumber) {
+                    const dangerExplanation = document.createElement('div');
+                    dangerExplanation.className = 'danger-explanation';
+                    
+                    const dangers = {
+                        'livingRoom': {
+                            1: {
+                                title: '防止烫伤危险',
+                                description: '桌子上的热水壶存在严重烫伤风险：',
+                                risks: [
+                                    '老人视力不好，容易碰倒热水壶',
+                                    '记忆力减退可能忘记关火',
+                                    '反应迟钝，烫伤后无法及时处理'
+                                ]
+                            },
+                            2: {
+                                title: '防止摔倒危险', 
+                                description: '沙发区域存在摔倒风险：',
+                                risks: [
+                                    '老人起身时容易失去平衡',
+                                    '地面湿滑或不平整',
+                                    '反应迟钝，摔倒后无法及时求助'
+                                ]
+                            }
+                        },
+                        'kitchen': {
+                            1: {
+                                title: '防止燃气泄漏',
+                                description: '燃气灶存在泄漏风险：',
+                                risks: [
+                                    '老人可能忘记关闭燃气阀门',
+                                    '嗅觉减退无法及时发现泄漏',
+                                    '记忆力差可能忘记正在使用燃气'
+                                ]
+                            },
+                            2: {
+                                title: '防止干烧危险',
+                                description: '忘记关火导致干烧存在火灾风险：',
+                                risks: [
+                                    '老人记忆力减退容易忘记关火',
+                                    '干烧可能导致锅具烧毁引发火灾',
+                                    '反应迟钝无法及时发现危险'
+                                ]
+                            }
+                        },
+                        'bathroom': {
+                            1: {
+                                title: '防止滑倒危险',
+                                description: '卫生间地面湿滑存在风险：',
+                                risks: [
+                                    '地面容易积水，老人容易滑倒',
+                                    '起身时容易失去平衡',
+                                    '反应迟钝，摔倒后无法及时求助'
+                                ]
+                            },
+                            2: {
+                                title: '防止漏电危险',
+                                description: '卫生间电器使用存在漏电风险：',
+                                risks: [
+                                    '老人可能使用湿手接触电器',
+                                    '电器老化可能导致漏电',
+                                    '对电击危险认识不足'
+                                ]
+                            }
+                        },
+                        'bedroom': {
+                            1: {
+                                title: '防止夜间摔倒',
+                                description: '夜间起床存在摔倒风险：',
+                                risks: [
+                                    '老人夜间起床时意识不清',
+                                    '光线不足容易绊倒',
+                                    '反应迟钝，摔倒后无法及时求助'
+                                ]
+                            },
+                            2: {
+                                title: '防止突发疾病',
+                                description: '夜间睡眠存在健康风险：',
+                                risks: [
+                                    '老人可能突发疾病无法求助',
+                                    '睡眠中可能出现呼吸问题',
+                                    '慢性病可能在夜间发作'
+                                ]
+                            }
+                        }
+                    };
+                    
+                    const danger = dangers[this.roomName][dangerNumber];
+                    
+                    dangerExplanation.innerHTML = `
+                        <h3><i class="fas fa-exclamation-triangle"></i> ${danger.title}</h3>
+                        <p>${danger.description}</p>
+                        <ul>
+                            ${danger.risks.map(risk => `<li>${risk}</li>`).join('')}
+                        </ul>
+                        <div class="question-box">
+                            <p>💡 思考：我们可以选择什么传感器来预防这种危险呢？</p>
+                        </div>
+                    `;
+                    
+                    panel.appendChild(dangerExplanation);
+                }
+                
+                showSensorSelection(panel, dangerNumber) {
+                    const sensorTitle = document.createElement('h4');
+                    sensorTitle.textContent = '请选择合适的传感器拖动到危险区域：';
+                    sensorTitle.style.marginBottom = '15px';
+                    sensorTitle.style.color = '#2c3e50';
+                    panel.appendChild(sensorTitle);
+                    
+                    const sensorOptions = document.createElement('div');
+                    sensorOptions.className = 'sensor-options';
+                    panel.appendChild(sensorOptions);
+                    
+                    // 生成传感器选项
+                    const sensors = dangerNumber === 1 ? this.danger1Sensors : this.danger2Sensors;
+                    this.generateSensorOptions(sensorOptions, sensors);
+                }
+                
+                generateSensorOptions(container, sensors) {
+                    // 随机排序传感器
+                    const shuffledSensors = [...sensors].sort(() => Math.random() - 0.5);
+                    
+                    shuffledSensors.forEach(sensor => {
+                        const sensorElement = document.createElement('div');
+                        sensorElement.className = 'sensor-option';
+                        sensorElement.draggable = true;
+                        sensorElement.innerHTML = `
+                            <i class="${sensor.icon}"></i>
+                            <div class="sensor-name">${sensor.name}</div>
+                        `;
+                        
+                        // 添加拖拽事件
+                        sensorElement.addEventListener('dragstart', function(e) {
+                            e.dataTransfer.setData('text/plain', sensor.name);
+                            e.dataTransfer.setData('correct', sensor.correct.toString());
+                        });
+                        
+                        container.appendChild(sensorElement);
+                    });
+                }
+                
+                handleDrop(e, zone) {
+                    e.preventDefault();
+                    zone.style.border = '4px dashed #2ecc71';
+                    zone.style.background = 'rgba(46, 204, 113, 0.15)';
+                    
+                    const sensorName = e.dataTransfer.getData('text/plain');
+                    const isCorrect = e.dataTransfer.getData('correct') === 'true';
+                    
+                    if (isCorrect) {
+                        // 正确选择
+                        zone.innerHTML = `
+                            <i class="fas fa-check-circle" style="font-size: 2rem; color: #2ecc71;"></i>
+                            <div style="margin-top: 10px; font-weight: bold;">${sensorName}</div>
+                        `;
+                        
+                        // 显示成功消息
+                        this.showSuccessMessage();
+                        
+                        this.sensorsPlaced++;
+                        
+                        // 检查是否所有传感器都已放置
+                        if (this.sensorsPlaced === 2) {
+                            this.interactionText.textContent = '恭喜！所有传感器已正确安装！';
+                        }
+                    } else {
+                        // 错误选择
+                        zone.innerHTML = `
+                            <i class="fas fa-times-circle" style="font-size: 2rem; color: #e74c3c;"></i>
+                            <div style="margin-top: 10px; font-weight: bold;">${sensorName}</div>
+                        `;
+                        
+                        // 短暂显示错误状态
+                        zone.style.border = '3px solid #e74c3c';
+                        zone.style.background = 'rgba(231, 76, 60, 0.2)';
+                        
+                        setTimeout(() => {
+                            zone.innerHTML = '';
+                            zone.style.border = '4px dashed #2ecc71';
+                            zone.style.background = 'rgba(46, 204, 113, 0.15)';
+                        }, 1500);
+                    }
+                }
+                
+                showSuccessMessage() {
+                    const successMessage = document.getElementById('successMessage');
+                    successMessage.style.display = 'block';
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                    }, 2000);
+                }
+            }
+
+            // 初始化房间管理器
+            const livingRoomManager = new RoomManager('livingRoom');
+            const kitchenManager = new RoomManager('kitchen');
+            const bathroomManager = new RoomManager('bathroom');
+            const bedroomManager = new RoomManager('bedroom');
+
+            // 页面导航逻辑
+            const houseExterior = document.getElementById('houseExterior');
+            const houseInterior = document.getElementById('houseInterior');
+            const frontDoor = document.getElementById('frontDoor');
+            const backToExterior = document.getElementById('backToExterior');
+            
+            const livingRoom = document.getElementById('livingRoom');
+            const kitchen = document.getElementById('kitchen');
+            const bathroom = document.getElementById('bathroom');
+            const bedroom = document.getElementById('bedroom');
+            
+            const livingRoomDetail = document.getElementById('livingRoomDetail');
+            const kitchenDetail = document.getElementById('kitchenDetail');
+            const bathroomDetail = document.getElementById('bathroomDetail');
+            const bedroomDetail = document.getElementById('bedroomDetail');
+            
+            const backToInterior1 = document.getElementById('backToInterior1');
+            const backToInterior2 = document.getElementById('backToInterior2');
+            const backToInterior3 = document.getElementById('backToInterior3');
+            const backToInterior4 = document.getElementById('backToInterior4');
+
+            // 事件监听器
+            frontDoor.addEventListener('click', function() {
+                houseExterior.style.display = 'none';
+                houseInterior.style.display = 'block';
+            });
+            
+            backToExterior.addEventListener('click', function() {
+                houseInterior.style.display = 'none';
+                houseExterior.style.display = 'flex';
+            });
+            
+            livingRoom.addEventListener('click', function() {
+                houseInterior.style.display = 'none';
+                livingRoomDetail.style.display = 'block';
+                livingRoomManager.reset();
+            });
+            
+            kitchen.addEventListener('click', function() {
+                houseInterior.style.display = 'none';
+                kitchenDetail.style.display = 'block';
+                kitchenManager.reset();
+            });
+            
+            bathroom.addEventListener('click', function() {
+                houseInterior.style.display = 'none';
+                bathroomDetail.style.display = 'block';
+                bathroomManager.reset();
+            });
+            
+            bedroom.addEventListener('click', function() {
+                houseInterior.style.display = 'none';
+                bedroomDetail.style.display = 'block';
+                bedroomManager.reset();
+            });
+            
+            backToInterior1.addEventListener('click', function() {
+                livingRoomDetail.style.display = 'none';
+                houseInterior.style.display = 'block';
+            });
+            
+            backToInterior2.addEventListener('click', function() {
+                kitchenDetail.style.display = 'none';
+                houseInterior.style.display = 'block';
+            });
+            
+            backToInterior3.addEventListener('click', function() {
+                bathroomDetail.style.display = 'none';
+                houseInterior.style.display = 'block';
+            });
+            
+            backToInterior4.addEventListener('click', function() {
+                bedroomDetail.style.display = 'none';
+                houseInterior.style.display = 'block';
+            });
+        }
+
+        // 初始化星级评分功能
+        function initStarRatings() {
+            document.querySelectorAll('.rating-stars').forEach(starsContainer => {
+                const stars = starsContainer.querySelectorAll('.star');
+                stars.forEach(star => {
+                    star.addEventListener('click', function() {
+                        const value = parseInt(this.getAttribute('data-value'));
+                        const containerId = starsContainer.id;
+                        
+                        // 重置所有星星
+                        stars.forEach(s => s.classList.remove('active'));
+                        
+                        // 激活选中的星星
+                        for (let i = 0; i < value; i++) {
+                            stars[i].classList.add('active');
+                        }
+                        
+                        // 保存评分
+                        saveRating(containerId, value);
+                    });
+                });
+            });
+        }
+
+        // 保存评分
+        function saveRating(containerId, value) {
+            const gameState = getCurrentGameState();
+            if (!gameState.ratings) {
+                gameState.ratings = {};
+            }
+            gameState.ratings[containerId] = value;
+            saveGameState();
+        }
+
+        // 获取当前游戏状态
+        function getCurrentGameState() {
+            const groupName = document.getElementById('group-select').value;
+            if (!groupName) return null;
+            
+            const savedState = localStorage.getItem(`shenglianGameState_${groupName}`);
+            return savedState ? JSON.parse(savedState) : { currentLevel: 1, badges: [...badges] };
+        }
+
+        // 更新任务状态显示
+        function updateTaskStatus() {
+            const task1Completed = document.getElementById('check3-1').checked;
+            const task2Completed = document.getElementById('check3-2').checked;
+            
+            document.getElementById('task1-status').textContent = task1Completed ? '已完成' : '进行中';
+            document.getElementById('task1-status').className = task1Completed ? 
+                'task-status-badge status-completed' : 'task-status-badge status-inprogress';
+            
+            document.getElementById('task2-status').textContent = task2Completed ? '已完成' : '进行中';
+            document.getElementById('task2-status').className = task2Completed ? 
+                'task-status-badge status-completed' : 'task-status-badge status-inprogress';
+            
+            saveGameState();
+            updateNavigation();
+        }
+
+        // 更新进度条
+        function updateProgress() {
+            const progress = ((currentLevel - 1) / (totalLevels - 1)) * 100;
+            document.getElementById('progress-fill').style.width = `${progress}%`;
+            
+            // 更新关卡激活状态
+            document.querySelectorAll('.level').forEach((level, index) => {
+                if (index + 1 <= currentLevel) {
+                    level.classList.add('active');
+                } else {
+                    level.classList.remove('active');
+                }
+            });
+        }
+
+        // 更新导航按钮状态
+        function updateNavigation() {
+            document.getElementById('prev-btn').disabled = currentLevel === 1;
+            
+            if (currentLevel === totalLevels) {
+                document.getElementById('next-btn').style.display = 'none';
+            } else {
+                document.getElementById('next-btn').style.display = 'block';
+                document.getElementById('next-btn').disabled = !isLevelComplete(currentLevel);
+            }
+        }
+
+        // 检查关卡是否完成
+        function isLevelComplete(level) {
+            // 第一关：只需要选择题已回答
+            if (level === 1) {
+                return document.querySelector('input[name="question1"]:checked') !== null;
+            }
+            
+            // 第二关：检查设计蓝图是否通过审核
+            if (level === 2) {
+                return document.getElementById('check2-1').checked;
+            }
+            
+            // 第三关：检查任务一、任务二是否完成（挑战任务是选做的，不影响过关）
+            if (level === 3) {
+                const task1Completed = document.getElementById('check3-1').checked;
+                const task2Completed = document.getElementById('check3-2').checked;
+                
+                return task1Completed && task2Completed;
+            }
+            
+            // 第四关：检查演示是否完成
+            if (level === 4) {
+                return document.getElementById('check4-1').checked;
+            }
+            
+            // 第五关：检查总结是否完成
+            if (level === 5) {
+                return document.getElementById('check5-1').checked;
+            }
+            
+            // 第六关：检查评价是否完成
+            if (level === 6) {
+                return document.getElementById('check6-1').checked;
+            }
+            
+            return false;
+        }
+
+        // 更新关卡完成状态显示
+        function updateLevelCompletion() {
+            for (let i = 1; i <= totalLevels; i++) {
+                const completionElement = document.getElementById(`level-${i}-completion`);
+                if (completionElement) {
+                    if (isLevelComplete(i) && currentLevel === i) {
+                        completionElement.classList.add('show');
+                    } else {
+                        completionElement.classList.remove('show');
+                    }
+                }
+            }
+        }
+
+        // 切换到下一关
+        function nextLevel() {
+            if (currentLevel < totalLevels && isLevelComplete(currentLevel)) {
+                // 解锁当前关卡的勋章
+                if (currentLevel <= 7) {
+                    badges[currentLevel - 1].earned = true;
+                    document.getElementById(`badge-${currentLevel}`).classList.add('unlocked');
+                }
+                
+                // 切换到下一关
+                document.getElementById(`level-${currentLevel}`).classList.remove('active');
+                currentLevel++;
+                document.getElementById(`level-${currentLevel}`).classList.add('active');
+                
+                updateProgress();
+                updateNavigation();
+                updateLevelCompletion();
+                
+                // 如果是最后一关，更新统计数据
+                if (currentLevel === totalLevels) {
+                    updateCompletionStats();
+                }
+                
+                saveGameState();
+            }
+        }
+
+        // 切换到上一关
+        function prevLevel() {
+            if (currentLevel > 1) {
+                document.getElementById(`level-${currentLevel}`).classList.remove('active');
+                currentLevel--;
+                document.getElementById(`level-${currentLevel}`).classList.add('active');
+                
+                updateProgress();
+                updateNavigation();
+                updateLevelCompletion();
+                saveGameState();
+            }
+        }
+
+        // 更新完成页面的统计数据
+        function updateCompletionStats() {
+            const earnedBadges = badges.filter(badge => badge.earned).length;
+            const completedTasks = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const challengesBeaten = document.querySelectorAll('input[type="checkbox"]:checked').length; // 简化计算
+            
+            document.getElementById('badges-earned').textContent = earnedBadges;
+            document.getElementById('tasks-completed').textContent = completedTasks;
+            document.getElementById('challenges-beaten').textContent = challengesBeaten;
+            
+            // 更新完成页面上的小组名称
+            const groupName = document.getElementById('group-select').value || '';
+            document.getElementById('final-team-name').textContent = `${groupName}`;
+        }
+
+        // 保存游戏状态到本地存储
+        function saveGameState() {
+            const groupName = document.getElementById('group-select').value;
+            
+            if (!groupName) {
+                showDbStatus('请先选择小组', 'error');
+                return;
+            }
+            
+            const gameState = {
+                currentLevel,
+                badges,
+                // 保存所有表单状态
+                formData: {},
+                ratings: {}
+            };
+            
+            // 保存所有表单元素状态
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                if (element.type === 'checkbox') {
+                    gameState.formData[element.id] = element.checked;
+                } else if (element.type === 'radio') {
+                    if (element.checked) {
+                        gameState.formData[element.name] = element.value;
+                    }
+                } else {
+                    gameState.formData[element.id] = element.value;
+                }
+            });
+            
+            // 保存评分数据
+            document.querySelectorAll('.rating-stars').forEach(starsContainer => {
+                const activeStars = starsContainer.querySelectorAll('.star.active').length;
+                gameState.ratings[starsContainer.id] = activeStars;
+            });
+            
+            // 模拟保存到数据库
+            localStorage.setItem(`shenglianGameState_${groupName}`, JSON.stringify(gameState));
+            showDbStatus(`数据已保存 (${groupName})`, 'success');
+        }
+
+        // 从本地存储加载游戏状态
+        function loadGameState() {
+            const groupName = document.getElementById('group-select').value;
+            
+            if (!groupName) {
+                resetGameState();
+                return;
+            }
+            
+            const savedState = localStorage.getItem(`shenglianGameState_${groupName}`);
+            if (savedState) {
+                const gameState = JSON.parse(savedState);
+                currentLevel = gameState.currentLevel || 1;
+                
+                // 恢复表单状态
+                if (gameState.formData) {
+                    Object.keys(gameState.formData).forEach(elementId => {
+                        const element = document.getElementById(elementId);
+                        if (element) {
+                            if (element.type === 'checkbox') {
+                                element.checked = gameState.formData[elementId];
+                            } else {
+                                element.value = gameState.formData[elementId];
+                            }
+                        }
+                        
+                        // 处理单选按钮
+                        if (elementId === 'question1') {
+                            const radio = document.querySelector(`input[name="question1"][value="${gameState.formData[elementId]}"]`);
+                            if (radio) {
+                                radio.checked = true;
+                                radio.closest('.option').classList.add('selected');
+                            }
+                        }
+                    });
+                }
+                
+                // 恢复评分状态
+                if (gameState.ratings) {
+                    Object.keys(gameState.ratings).forEach(ratingId => {
+                        const starsContainer = document.getElementById(ratingId);
+                        if (starsContainer) {
+                            const stars = starsContainer.querySelectorAll('.star');
+                            const ratingValue = gameState.ratings[ratingId];
+                            
+                            // 重置所有星星
+                            stars.forEach(star => star.classList.remove('active'));
+                            
+                            // 激活选中的星星
+                            for (let i = 0; i < ratingValue; i++) {
+                                stars[i].classList.add('active');
+                            }
+                        }
+                    });
+                }
+                
+                // 恢复挑战任务选择
+                if (gameState.formData && gameState.formData['challenge-select']) {
+                    document.getElementById('challenge-select').value = gameState.formData['challenge-select'];
+                    // 触发change事件来显示对应的描述
+                    const event = new Event('change');
+                    document.getElementById('challenge-select').dispatchEvent(event);
+                }
+
+                // 恢复挑战任务完成状态
+                if (gameState.formData && gameState.formData['check3-3']) {
+                    document.getElementById('check3-3').checked = gameState.formData['check3-3'];
+                }
+                
+                // 恢复关卡显示
+                document.querySelectorAll('.level-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(`level-${currentLevel}`).classList.add('active');
+                
+                // 恢复勋章状态
+                if (gameState.badges) {
+                    gameState.badges.forEach((badge, index) => {
+                        if (badge.earned && index < 7) {
+                            badges[index].earned = true;
+                            document.getElementById(`badge-${index + 1}`).classList.add('unlocked');
+                        }
+                    });
+                }
+                
+                // 恢复任务二状态
+                if (gameState.formData && gameState.formData['check3-1']) {
+                    unlockTask2();
+                }
+                
+                updateProgress();
+                updateNavigation();
+                updateTaskStatus();
+                updateLevelCompletion();
+                
+                // 如果是最后一关，更新统计数据
+                if (currentLevel === totalLevels) {
+                    updateCompletionStats();
+                }
+                
+                showDbStatus(`已加载 ${groupName} 的数据`, 'success');
+            } else {
+                resetGameState();
+                showDbStatus(`${groupName} 没有保存的数据，已初始化新数据`, 'success');
+            }
+        }
+
+        // 重置游戏状态
+        function resetGameState() {
+            currentLevel = 1;
+            badges.forEach(badge => badge.earned = false);
+            
+            // 重置所有表单
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                if (element.type === 'checkbox') {
+                    element.checked = false;
+                } else if (element.type === 'radio') {
+                    element.checked = false;
+                    element.closest('.option').classList.remove('selected');
+                } else {
+                    element.value = '';
+                }
+            });
+            
+            // 重置评分
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.remove('active');
+            });
+            
+            // 重置关卡显示
+            document.querySelectorAll('.level-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById('level-1').classList.add('active');
+            
+            // 重置勋章
+            document.querySelectorAll('.badge').forEach(badge => {
+                badge.classList.remove('unlocked');
+            });
+            
+            // 重置任务二状态
+            document.getElementById('task2-card').classList.add('task-locked');
+            document.getElementById('check3-2').disabled = true;
+            document.getElementById('task1-complete-message').style.display = 'none';
+            
+            // 重置任务导航
+            document.getElementById('task1-nav').classList.add('active');
+            document.getElementById('task2-nav').classList.remove('active');
+            document.getElementById('task1-content').classList.add('active');
+            document.getElementById('task2-content').classList.remove('active');
+            
+            // 隐藏所有过关确认
+            document.querySelectorAll('.level-completion').forEach(element => {
+                element.classList.remove('show');
+            });
+            
+            updateProgress();
+            updateNavigation();
+            updateTaskStatus();
+        }
+
+        // 显示数据库状态
+        function showDbStatus(message, type) {
+            const dbStatus = document.getElementById('db-status');
+            dbStatus.textContent = message;
+            dbStatus.className = `db-status ${type}`;
+            dbStatus.style.display = 'block';
+            
+            // 3秒后隐藏状态消息
+            setTimeout(() => {
+                dbStatus.style.display = 'none';
+            }, 3000);
+        }
+
+        // 重新开始游戏
+        function restartGame() {
+            if (confirm('确定要重新开始挑战吗？所有进度将被重置。')) {
+                const groupName = document.getElementById('group-select').value;
+                if (groupName) {
+                    localStorage.removeItem(`shenglianGameState_${groupName}`);
+                }
+                resetGameState();
+                showDbStatus('游戏已重置', 'success');
+            }
+        }
+
+        // 监听复选框变化，自动保存状态
+        document.addEventListener('change', function(event) {
+            if (event.target.type === 'checkbox') {
+                saveGameState();
+                updateNavigation();
+                updateLevelCompletion();
+            }
+        });
+
+        // 页面加载完成后初始化游戏
+        document.addEventListener('DOMContentLoaded', initGame);
+    </script>
+</body>
+</html>

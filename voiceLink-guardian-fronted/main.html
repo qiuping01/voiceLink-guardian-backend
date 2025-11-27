@@ -1,0 +1,1028 @@
+<body>
+    <div class="game-container">
+        <!-- 头部 -->
+        <div class="game-header">
+            <div class="mission-badge">S级任务</div>
+            <h1>声联守护·终极挑战</h1>
+            <p>空巢老人紧急呼救与安全监控系统</p>
+            
+            <div class="team-info">
+                <div class="info-item">
+                    <strong>小组:</strong> 
+                    <select class="input-field" id="group-select">
+                        <option value="">-- 请选择小组 --</option>
+                        <option value="第一组">第一组</option>
+                        <option value="第二组">第二组</option>
+                        <option value="第三组">第三组</option>
+                        <option value="第四组">第四组</option>
+                        <option value="第五组">第五组</option>
+                        <option value="第六组">第六组</option>
+                        <option value="第七组">第七组</option>
+                        <option value="第八组">第八组</option>
+                        <option value="第九组">第九组</option>
+                        <option value="第十组">第十组</option>
+  
+                    </select>
+                </div>
+                <div class="info-item">
+                    <strong>指挥官:</strong> <span>刘燚娜老师</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 数据库状态提示 -->
+        <div id="db-status" class="db-status" style="display: none;"></div>
+
+        <!-- 进度条 -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="levels">
+                <div class="level active" data-level="1">情境与问题</div>
+                <div class="level" data-level="2">方案设计</div>
+                <div class="level" data-level="3">动手搭建</div>
+                <div class="level" data-level="4">成果展示</div>
+                <div class="level" data-level="5">总结拓展</div>
+                <div class="level" data-level="6">教学评价</div>
+            </div>
+        </div>
+
+        <!-- 内容区域 -->
+        <div class="game-content">
+            <!-- 关卡1: 情境与问题 -->
+            <div class="level-content active" id="level-1">
+                <div class="mission-card">
+                    <h2>第一关：情境与问题——为何需要"声联守护"</h2>
+                    <p><strong>任务目标:</strong> 理解项目的意义与价值，明确技术选型的理由。</p>
+                    
+                    <div class="mission-objective">
+                        <h3>行动指南:</h3>
+                        <p>1. 观看情境视频，思考：视频中老人面临的最大困境是什么？</p>
+                        <p>2. 与小队成员交流你的看法。</p>
+                    </div>
+                    
+                    <div class="question-container">
+                        <div class="question-text">思考与讨论：视频中老人面临的最大困境是什么？</div>
+                        <div class="options-container">
+                            <div class="option" id="option-a">
+                                <input type="radio" id="choice-a" name="question1" value="A">
+                                <label for="choice-a">A. 摔倒本身</label>
+                            </div>
+                            <div class="option" id="option-b">
+                                <input type="radio" id="choice-b" name="question1" value="B">
+                                <label for="choice-b">B. 摔倒后求救信号无法有效传递</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-objective">
+                        <h3>我们的使命:</h3>
+                        <p>构建一个能"听懂"老人呼救，并能立即向云端发送警报的智能系统。</p>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-1-completion">
+                    <div class="completion-icon">🎯</div>
+                    <div class="completion-title">第一关完成！</div>
+                    <div class="completion-message">您已成功理解项目意义，可以进入下一关</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">🔍</div>
+                            <div>洞察者</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：洞察者</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-1">
+                        <div>
+                            <div class="badge-icon">🔍</div>
+                            <div>洞察者</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡2: 方案设计 -->
+            <div class="level-content" id="level-2">
+                <div class="mission-card">
+                    <h2>第二关：方案设计——空巢老人智能安全系统设计方案</h2>
+                    <p><strong>任务目标:</strong> 为你的系统选定场景、设计功能，并规划技术路线。</p>
+                    
+                    <div class="mission-objective">
+                        <h3>行动指南:</h3>
+                        <p>请同学们选定一个生活场景，深入分析空巢老人在此可能遇到的困难与风险，并设计出能通过语音识别技术提供帮助的智能解决方案。</p>
+                    </div>
+                    
+                    <!-- 空巢老人安全管理系统 -->
+                    <div class="elderly-safety-system">
+                        <div class="elderly-safety-header">
+                            <h3><i class="fas fa-home"></i> 空巢老人安全管理系统</h3>
+                            <p>帮助您分析不同场景中的安全隐患，为系统设计提供参考</p>
+                        </div>
+                        
+                        <div class="safety-system-container">
+                            <!-- 房屋外部视图 -->
+                            <div class="house-exterior" id="houseExterior">
+                                <div class="house-image">
+                                    <img src="https://img.tukuppt.com/png_preview/00/04/45/oVwPXJXJWr.jpg!/fw/780" alt="卡通房屋">
+                                    <div class="door-overlay" id="frontDoor">
+                                        进入
+                                    </div>
+                                </div>
+                                <div class="instruction">
+                                    点击大门进入房屋内部，探索各个房间的安全隐患
+                                </div>
+                            </div>
+                            
+                            <!-- 房屋内部俯视图 -->
+                            <div class="house-interior" id="houseInterior">
+                                <button class="back-button" id="backToExterior">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <h2 style="text-align:center; margin-bottom:15px; color:#2c3e50;">房屋内部俯视图</h2>
+                                <div class="floor-plan">
+                                    <div class="room" id="livingRoom">
+                                        <i class="fas fa-couch"></i>
+                                        <div class="room-name">客厅</div>
+                                    </div>
+                                    <div class="room" id="kitchen">
+                                        <i class="fas fa-utensils"></i>
+                                        <div class="room-name">厨房</div>
+                                    </div>
+                                    <div class="room" id="bathroom">
+                                        <i class="fas fa-bath"></i>
+                                        <div class="room-name">卫生间</div>
+                                    </div>
+                                    <div class="room" id="bedroom">
+                                        <i class="fas fa-bed"></i>
+                                        <div class="room-name">卧室</div>
+                                    </div>
+                                </div>
+                                <div class="instruction">
+                                    点击任意房间查看该区域的安全隐患及解决方案
+                                </div>
+                            </div>
+                            
+                            <!-- 客厅详情 -->
+                            <div class="room-detail" id="livingRoomDetail">
+                                <button class="back-button" id="backToInterior1">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-couch"></i> 客厅安全分析</h2>
+                                    <p>"老人在客厅休息，最可能发生什么意外？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="livingRoomLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 客厅图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/abf405d1ef0e4dcc8a8cf07e7370e4fepreview.png~tplv-a9rns2rl98-downsize.png?rcl=021762856001220fdbddc03001b0b280000000000000019584e9a&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079080008&x-signature=uLfRQ%2FLoXawrkZ4cx5%2Fyt1E%2BLlY%3D" alt="客厅安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="livingRoomDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="livingRoomDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="livingRoomDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="livingRoomDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="livingRoomRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="livingRoomInteractionText">点击按钮标记客厅中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="livingRoomMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="livingRoomResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 厨房详情 -->
+                            <div class="room-detail" id="kitchenDetail">
+                                <button class="back-button" id="backToInterior2">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-utensils"></i> 厨房安全分析</h2>
+                                    <p>"厨房里有哪些容易被忽略的安全隐患？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="kitchenLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 厨房图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/9de9fb40f47a408490d73f5a7947b732preview.png~tplv-a9rns2rl98-image.png?rcl=021762855675356fdbddc03001b0b280000000000000019c365c8&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079079682&x-signature=mia6SndAOKpPgQzkfyg3zCpeJws%3D" alt="厨房安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="kitchenDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="kitchenDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="kitchenDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="kitchenDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="kitchenRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="kitchenInteractionText">点击按钮标记厨房中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="kitchenMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="kitchenResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 卫生间详情 -->
+                            <div class="room-detail" id="bathroomDetail">
+                                <button class="back-button" id="backToInterior3">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-bath"></i> 卫生间安全分析</h2>
+                                    <p>"卫生间是意外高发地，我们可以怎么预防？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="bathroomLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 卫生间图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/f02405fcc4624f728adc4b87214c6b03preview.png~tplv-a9rns2rl98-downsize.png?rcl=021762855888721fdbddc03001b0b280000000000000019bb8e69&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079079895&x-signature=6VhVXawz2ldXuD8e8erXLys30bI%3D" alt="卫生间安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="bathroomDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="bathroomDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="bathroomDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="bathroomDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="bathroomRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="bathroomInteractionText">点击按钮标记卫生间中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="bathroomMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="bathroomResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 卧室详情 -->
+                            <div class="room-detail" id="bedroomDetail">
+                                <button class="back-button" id="backToInterior4">
+                                    <i class="fas fa-arrow-left"></i>
+                                </button>
+                                <div class="room-header">
+                                    <h2><i class="fas fa-bed"></i> 卧室安全分析</h2>
+                                    <p>"在卧室，我们如何关注老人的夜间安全？"</p>
+                                </div>
+                                <div class="room-content">
+                                    <!-- 左侧面板 -->
+                                    <div class="side-panel" id="bedroomLeftPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                    
+                                    <!-- 中间区域 - 卧室图片 -->
+                                    <div class="room-image-container">
+                                        <img src="https://p9-flow-imagex-sign.byteimg.com/ocean-cloud-tos/c8fbfc4e0b3143ce8b0d0ad5a62fba24preview.png~tplv-a9rns2rl98-downsize.png?rcl=021762854527124fdbddc03001b0b28000000000000001973f38d&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079078535&x-signature=I2ynZ1FexyLbpUd2K%2FV3FaFGaJA%3D" alt="卧室安全分析" class="room-image">
+                                        <!-- 红色箭头 -->
+                                        <div class="danger-arrow" id="bedroomDangerArrow1" style="top: 35%; left: 65%;"></div>
+                                        <div class="danger-arrow" id="bedroomDangerArrow2" style="top: 35%; left: 25%; display: none;"></div>
+                                        <!-- 传感器放置区域 -->
+                                        <div class="sensor-drop-zone" id="bedroomDropZone1" style="top: 40%; left: 70%;"></div>
+                                        <div class="sensor-drop-zone" id="bedroomDropZone2" style="top: 40%; left: 20%; display: none;"></div>
+                                    </div>
+                                    
+                                    <!-- 右侧面板 -->
+                                    <div class="side-panel" id="bedroomRightPanel">
+                                        <!-- 内容将通过JavaScript动态生成 -->
+                                    </div>
+                                </div>
+                                
+                                <!-- 底部交互区域 -->
+                                <div class="interaction-area">
+                                    <h3>安全防护操作区</h3>
+                                    <p id="bedroomInteractionText">点击按钮标记卧室中的危险区域</p>
+                                    <div class="interaction-buttons">
+                                        <button class="interaction-button" id="bedroomMarkDangerBtn">
+                                            <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                                        </button>
+                                        <button class="interaction-button" id="bedroomResetBtn">
+                                            <i class="fas fa-redo"></i> 重置
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 成功消息 -->
+                            <div class="success-message" id="successMessage">
+                                <i class="fas fa-check-circle"></i><br>
+                                成功安装传感器！
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="checklist">
+                        <h3>系统设计蓝图:</h3>
+                        <div class="scene-item">
+                            <span class="scene-label">我们小组重点关注的场景是:</span> 
+                            <select class="input-field" id="scene-select">
+                                <option value="" selected disabled>-- 请选择场景 --</option>
+                                <option value="客厅">客厅</option>
+                                <option value="卧室">卧室</option>
+                                <option value="卫生间">卫生间</option>
+                                <option value="厨房">厨房</option>
+                            </select>
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">在该场景下，老人最可能遇到的风险是:</span> 
+                            <input type="text" class="input-field" id="risk-input" placeholder="例如: 摔倒、突发疾病">
+                        </div>
+                        
+                        <h4 class="mt-4">物联网三层架构设计:</h4>
+                        <table class="design-table">
+                            <thead>
+                                <tr>
+                                    <th>物联网三层架构</th>
+                                    <th>环节</th>
+                                    <th>我们的设计</th>
+                                    <th>注意事项</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td rowspan="2">感知层（信息采集）</td>
+                                    <td>老人在这种紧急情况下，最可能喊出的语音指令是:</td>
+                                    <td>
+                                        <input type="text" class="input-field" placeholder="指令1" id="cmd1">
+                                        <input type="text" class="input-field" placeholder="指令2" id="cmd2">
+                                    </td>
+                                    <td>指令应简短、顺口、不易误触发。</td>
+                                </tr>
+                                <tr>
+                                    <td>行空板收到求救信息后，发出什么语音安抚老人</td>
+                                    <td>
+                                        <input type="text" class="input-field" placeholder="播放语音" id="response-speech">
+                                    </td>
+                                    <td>本地响应可以让老人确认系统已启动，给予安全感。</td>
+                                </tr>
+                                <tr>
+                                    <td>网络层+应用层（信息传输与使用）</td>
+                                    <td>发送什么信息给家人或云平台</td>
+                                    <td><input type="text" class="input-field" placeholder="发送内容" id="cloud-data"></td>
+                                    <td>数据要包含最关键的信息，让远方监护人能快速了解情况。</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <div class="check-item mt-3 highlight-completion highlight-warning">
+                            <input type="checkbox" id="check2-1">
+                            <label for="check2-1">我们的设计蓝图已通过指挥官（老师）审核！</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-2-completion">
+                    <div class="completion-icon">📐</div>
+                    <div class="completion-title">第二关完成！</div>
+                    <div class="completion-message">您已成功设计空巢老人安全系统方案</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">📐</div>
+                            <div>设计师</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：设计师</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-2">
+                        <div>
+                            <div class="badge-icon">📐</div>
+                            <div>设计师</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡3: 动手搭建 -->
+            <div class="level-content" id="level-3">
+                <div class="mission-card">
+                    <h2>第三关：动手搭建——探究实施，联调系统</h2>
+                    <p><strong>任务目标:</strong> 编写程序实现语音识别功能，并将数据上传到云端。</p>
+                    
+                    <!-- 任务导航 -->
+                    <div class="task-navigation">
+                        <button class="task-nav-btn active" id="task1-nav">任务一：让行空板"学会听"</button>
+                        <button class="task-nav-btn" id="task2-nav">任务二：实现数据上云</button>
+                    </div>
+                    
+                    <!-- 任务一内容 -->
+                    <div class="task-content active" id="task1-content">
+                        <div class="task-card">
+                            <div class="task-header">
+                                <div class="task-title">任务一：编写程序，让行空板"学会听"</div>
+                                <div class="task-status">
+                                    <span class="task-status-badge status-inprogress" id="task1-status">进行中</span>
+                                </div>
+                            </div>
+                            <p>准确识别老人"救命啊"等求助指令，输出识别结果</p>
+                            
+                            <h4>行动指南:</h4>
+                            <div class="task-step">
+                                <p><strong>1.</strong> 连接行空板，在Mind+中打开"任务一"程序</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312353.png" alt="连接行空板" class="guide-image">
+                            </div>
+                            <div class="task-step">
+                                <p><strong>2.</strong> 参照《实验手册》，修改代码中的唤醒词和识别指令</p>
+                                <img src="https://cdn.nlark.com/yuque/0/2025/png/57681281/1763556066129-564bac4a-078b-4c18-a4d3-4da2cea5476d.png" alt="修改唤醒词和识别指令" class="guide-image">
+                            </div>
+                            <div class="task-step">
+                                <p><strong>3.</strong> 上传程序并测试！</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312125.png" alt="上传程序并测试" class="guide-image">
+                            </div>
+                            
+                            <div class="check-item mt-3 highlight-task-completion">
+                                <input type="checkbox" id="check3-1">
+                                <label for="check3-1">我们成功让行空板"听懂"了指令！</label>
+                            </div>
+                            
+                            <!-- 任务一完成提示 -->
+                            <div id="task1-complete-message" class="task-unlock-message" style="display: none;">
+                                <i class="fas fa-check-circle"></i> 恭喜！任务一已完成，现在可以开始任务二了！
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 任务二内容 -->
+                    <div class="task-content" id="task2-content">
+                        <div class="task-card task-locked" id="task2-card">
+                            <div class="task-locked-overlay">请先完成任务一</div>
+                            <div class="task-header">
+                                <div class="task-title">任务二：实现行空板数据上云</div>
+                                <div class="task-status">
+                                    <span class="task-status-badge" id="task2-status">锁定中</span>
+                                </div>
+                            </div>
+                            <p>将语音识别结果与传感器数据上传至Easy IoT平台，支持远程查看</p>
+                            
+                            <h4>行动指南:</h4>
+                            
+                            <div class="step-section">
+                                <div class="step-title">一、编写程序</div>
+                                <p>1. 在任务一的基础上，在左下角扩展"网络服务"界面，选择"MQTT"和"WI-FI"两项扩展</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311639.png" alt="网络服务扩展" class="guide-image">
+                                <p>2. 点击"返回"回到主界面，左侧积木栏中增加了"掌控"和"网络服务"两个积木。其中，"网络服务"又包括了"MQTT"和"WI-FI"两项扩展，在左侧网络服务中将图下程序块拖动到编程界面，修改WIFI名称密码。</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311094.png" alt="修改WIFI配置" class="guide-image">
+                            </div>
+                            
+                            <div class="step-section">
+                                <div class="step-title">二、搭建应用层平台</div>
+                                <p>1. 在学生素材文件夹，打开Easy Iot平台<br>
+                                   网址：<a href="https://iot.dfrobot.com.cn/index.html" target="_blank">https://iot.dfrobot.com.cn/index.html</a></p>
+                                
+                                <p>2. 点击工作间→登录账号→添加新的设备→需点击眼睛图标→显示相应信息</p>
+                                <img src="https://cdn.nlark.com/yuque/0/2025/png/57681281/1763556064420-d34d997f-5a22-40a6-96b7-a5155044ac10.png" alt="Easy IOT平台设置" class="guide-image">
+                                
+                                <p>3. 使用Easy Iot连接物联网，需要用到(图中标记的参数需要对应填入到mind+的MQTT初始化参数：<br>
+                                   iot_id、iot_pwd、话题（topic）</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311078.png" alt="MQTT参数" class="guide-image">
+                                
+                                <p>4. 完整程序如图所示</p>
+                                <img src="https://cdn.nlark.com/yuque/0/2025/png/57681281/1763556065189-54d8b2a9-33c7-4542-815d-139ed9ff8a22.png" alt="完整程序" class="guide-image">
+                            </div>
+                            
+                            <div class="step-section">
+                                <div class="step-title">四、刷入程序</div>
+                                <p>Mind+点击上传到设备，确认是否上传成功</p>
+                            </div>
+                            
+                            <div class="step-section">
+                                <div class="step-title">五、测试实验结果</div>
+                                <p>1. 说"你好小行（小新）"，进入唤醒状态。说对应的识别词，喇叭播放对应的回应词。</p>
+                                <p>2. 进入Easy IOT平台→点击查看详情→点击刷新→点击查看，查看是否已经收到对应的回应词，收到即实验成功！</p>
+                                <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212311010.png" alt="查看实验结果" class="guide-image">
+                            </div>
+                            
+                            <div class="check-item mt-3 highlight-task-completion task2">
+                                <input type="checkbox" id="check3-2" disabled>
+                                <label for="check3-2">我们成功将数据上传到云端！</label>
+                            </div>
+
+                            <!-- 挑战任务选择 -->
+                            <div class="step-section">
+                                <div class="step-title">六、挑战任务（选做）</div>
+                                <p>恭喜完成基础任务！现在可以选择一个进阶挑战来提升你的技能：</p>
+                                
+                                <div class="scene-item">
+                                    <span class="scene-label">选择挑战任务:</span> 
+                                    <select class="input-field" id="challenge-select">
+                                        <option value="" selected disabled>-- 请选择挑战任务 --</option>
+                                        <option value="challenge1">进阶挑战一（温湿度传感器火灾报警）</option>
+                                        <option value="challenge2">进阶挑战二（语音控制开关灯）</option>
+                                        <option value="challenge3">进阶挑战三（检测加速度值摔倒报警）</option>
+                                    </select>
+                                </div>
+                                
+                                <!-- 挑战任务描述 -->
+                                <div id="challenge-descriptions" style="margin-top: 15px;">
+                                    <!-- 挑战一描述 -->
+                                    <div id="challenge1-desc" class="mission-objective" style="display: none;">
+                                        <h4>进阶挑战一：温湿度传感器火灾报警</h4>
+                                        <p><strong>任务描述:</strong> 使用K10自带的温湿度传感器，当检测到异常高温时自动触发火灾报警。</p>
+                                        <p><strong>实现步骤:</strong></p>
+                                        <ul>
+                                            <li>1. 在行空板板载传感器中选择读取温度（摄氏度）</li>
+                                            <li>2. 设置温度阈值（如35°C）</li>
+                                            <li>3. 当温度超过阈值时，自动发送火灾警报到云端</li>
+                                            <li>4. 行空板同时播放语音警告</li>
+                                        </ul>
+                                        <p><strong>参考程序:</strong></p>
+                                        <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312449.png" alt="温湿度传感器火灾报警程序" class="guide-image">
+                                    </div>
+                                    
+                                    <!-- 挑战二描述 -->
+                                    <div id="challenge2-desc" class="mission-objective" style="display: none;">
+                                        <h4>进阶挑战二：语音控制开关灯</h4>
+                                        <p><strong>任务描述:</strong> 实现通过语音指令控制LED灯的开关。</p>
+                                        <p><strong>实现步骤:</strong></p>
+                                        <ul>
+                                            <li>1. 点击左边行空板K10，找到LED控制模块，具体程序如下：</li>
+                                        </ul>
+                                        <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511212312331.png" alt="LED控制模块程序" class="guide-image">
+                                        <ul>
+                                            <li>2. 训练语音识别模块识别"开灯"、"关灯"指令</li>
+                                            <li>3. 根据语音指令控制LED灯状态</li>
+                                        </ul>
+                                    </div>
+                                    
+                                    <!-- 挑战三描述 -->
+                                    <div id="challenge3-desc" class="mission-objective" style="display: none;">
+                                        <h4>进阶挑战三：检测加速度值摔倒报警</h4>
+                                        <p><strong>任务描述:</strong> 利用行空板内置的加速度传感器检测老人摔倒动作。</p>
+                                        <p><strong>实现步骤:</strong></p>
+                                        <ul>
+                                            <li>1. 启用行空板内置的加速度传感器</li>
+                                            <li>2. 设置加速度阈值算法检测摔倒动作</li>
+                                            <li>3. 检测到摔倒时自动发送紧急求助信息</li>
+                                            <li>4. 结合语音识别实现双重保险</li>
+                                            <img src="https://img-1372837879.cos.ap-guangzhou.myqcloud.com/img/202511222327525.png" alt="加速度传感器程序" class="guide-image">
+                                        </ul>
+                                    </div>
+                                </div>
+                                
+                                <div class="check-item mt-3 highlight-completion highlight-purple">
+                                    <input type="checkbox" id="check3-3" disabled>
+                                    <label for="check3-3">我们完成了选做的挑战任务！</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-3-completion">
+                    <div class="completion-icon">🔧</div>
+                    <div class="completion-title">第三关完成！</div>
+                    <div class="completion-message">您已成功搭建语音识别系统并实现数据上云</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">👂</div>
+                            <div>听觉专家</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：听觉专家 & 云端专家</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-3">
+                        <div>
+                            <div class="badge-icon">👂</div>
+                            <div>听觉专家</div>
+                        </div>
+                    </div>
+                    <div class="badge" id="badge-4">
+                        <div>
+                            <div class="badge-icon">☁️</div>
+                            <div>云端专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡4: 成果展示 -->
+            <div class="level-content" id="level-4">
+                <div class="mission-card">
+                    <h2>第四关：成果展示——授勋大殿</h2>
+                    <p><strong>任务目标:</strong> 向所有守护者展示你们的成果与智慧。</p>
+                    
+                    <div class="mission-objective">
+                        <h3>行动指南:</h3>
+                        <p>1. 成果展示：现场演示你的"声联守护"系统。</p>
+                        <p>2. 心得分享：分享闯关过程中最难忘的一个"Boss"（难题）以及你们是如何击败它的。</p>
+                    </div>
+                    
+                    <div class="checklist">
+                        <h3>项目总结:</h3>
+                        <div class="scene-item">
+                            <span class="scene-label">我们小组选择的是:</span> 
+                            <select class="input-field" id="final-scene">
+                                <option value="" selected disabled>-- 请选择场景 --</option>
+                                <option value="卧室">卧室</option>
+                                <option value="卫生间">卫生间</option>
+                                <option value="厨房">厨房</option>
+                                <option value="客厅">客厅</option>
+                            </select>
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">实现功能:</span> 
+                            <input type="text" class="input-field" id="final-function" placeholder="功能描述">
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">我们还添加了功能:</span> 
+                            <input type="text" class="input-field" id="final-extra" placeholder="额外功能">
+                        </div>
+                        
+                        <!-- 新增：最难Boss和解决方法 -->
+                        <div class="scene-item">
+                            <span class="scene-label">在闯关过程中，我们遇到最难的一个"Boss"（难题）是:</span> 
+                            <input type="text" class="input-field" id="final-boss" placeholder="描述难题">
+                        </div>
+                        <div class="scene-item">
+                            <span class="scene-label">我们通过:</span> 
+                            <input type="text" class="input-field" id="final-solution" placeholder="解决方法">
+                            <span>的方法最终击败了它！</span>
+                        </div>
+                        
+                        <div class="check-item mt-3 highlight-completion highlight-info">
+                            <input type="checkbox" id="check4-1">
+                            <label for="check4-1">我们成功完成了系统演示！</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-4-completion">
+                    <div class="completion-icon">🏆</div>
+                    <div class="completion-title">第四关完成！</div>
+                    <div class="completion-message">您已成功展示项目成果并分享心得</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">🏆</div>
+                            <div>展示专家</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：展示专家</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-5">
+                        <div>
+                            <div class="badge-icon">🏆</div>
+                            <div>展示专家</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡5: 总结拓展 -->
+            <div class="level-content" id="level-5">
+                <div class="completion-screen">
+                    <div class="final-badge">
+                        <div>
+                            <div style="font-size: 40px; margin-bottom: 10px;">🎓</div>
+                            <div>声联守护<br>终极勋章</div>
+                        </div>
+                    </div>
+                    
+                    <h2>恭喜！<span id="final-team-name">--</span>已成功完成所有挑战！</h2>
+                    <p>你们已成为合格的AIoT守护者，用技术传递温暖，守护空巢老人的安全！</p>
+                    
+                    <div class="achievement-stats">
+                        <div class="stat">
+                            <div class="stat-value" id="badges-earned">0</div>
+                            <div class="stat-label">勋章获得</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="tasks-completed">0</div>
+                            <div class="stat-label">任务完成</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-value" id="challenges-beaten">0</div>
+                            <div class="stat-label">挑战击败</div>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-card mt-4">
+                        <h3>学习效果评估与反思</h3>
+                        
+                        <!-- 问题1 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">1. 通过本项目，我对人工智能语音识别与物联网技术的理解有了明显加深。</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="radio" id="q1-5" name="question1" value="5">
+                                    <label for="q1-5">非常同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-4" name="question1" value="4">
+                                    <label for="q1-4">同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-3" name="question1" value="3">
+                                    <label for="q1-3">一般</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-2" name="question1" value="2">
+                                    <label for="q1-2">不同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q1-1" name="question1" value="1">
+                                    <label for="q1-1">非常不同意</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题2 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">2. 我能够清晰地描述"声联守护"系统中感知层、网络层、应用层各自的作用。</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="radio" id="q2-5" name="question2" value="5">
+                                    <label for="q2-5">非常同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-4" name="question2" value="4">
+                                    <label for="q2-4">同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-3" name="question2" value="3">
+                                    <label for="q2-3">一般</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-2" name="question2" value="2">
+                                    <label for="q2-2">不同意</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="q2-1" name="question2" value="1">
+                                    <label for="q2-1">非常不同意</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题3 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">3. 在完成本项目后，我掌握或提升了以下哪些技能？（可多选）</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="checkbox" id="skill1" name="skills" value="mindplus">
+                                    <label for="skill1">使用Mind+进行图形化编程</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill2" name="skills" value="speech">
+                                    <label for="skill2">配置和使用语音识别模块</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill3" name="skills" value="mqtt">
+                                    <label for="skill3">理解并配置MQTT协议参数</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill4" name="skills" value="iot">
+                                    <label for="skill4">将硬件设备数据上传至云平台(Easy IoT)</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill5" name="skills" value="debug">
+                                    <label for="skill5">软硬件联调与故障排查</label>
+                                </div>
+                                <div class="option">
+                                    <input type="checkbox" id="skill6" name="skills" value="teamwork">
+                                    <label for="skill6">团队协作与项目规划</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题4 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">4. 你认为课程中哪个环节挑战最大？</label>
+                            <div class="options-container">
+                                <div class="option">
+                                    <input type="radio" id="challenge1" name="challenge" value="design">
+                                    <label for="challenge1">方案设计（将想法转化为具体方案）</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge2" name="challenge" value="speech">
+                                    <label for="challenge2">语音识别程序编写与调试</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge3" name="challenge" value="mqtt">
+                                    <label for="challenge3">MQTT参数配置与联网</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge4" name="challenge" value="debug">
+                                    <label for="challenge4">软硬件联合调试</label>
+                                </div>
+                                <div class="option">
+                                    <input type="radio" id="challenge5" name="challenge" value="none">
+                                    <label for="challenge5">没有特别困难的环节</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 问题5 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">5. 如果可以为"声联守护"系统增加一项新功能，你希望是什么？（例如：自动拨打求救电话、增加环境传感器(烟雾、煤气)、能用语音聊天陪伴老人等）</label>
+                            <textarea class="feedback-input" rows="3" id="new-feature" placeholder="请描述你希望增加的新功能..."></textarea>
+                        </div>
+                        
+                        <!-- 问题6 -->
+                        <div class="feedback-item">
+                            <label class="feedback-label">6. 通过本节课，你对"技术服务于人"的理解有哪些新的收获？</label>
+                            <textarea class="feedback-input" rows="3" id="value-insight" placeholder="分享你的理解..."></textarea>
+                        </div>
+                        
+                        <div class="check-item mt-3 highlight-completion highlight-warning">
+                            <input type="checkbox" id="check5-1">
+                            <label for="check5-1">我已完成学习效果评估与反思！</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-card mt-4">
+                        <h4>指挥官寄语:</h4>
+                        <p style="font-style: italic;">
+                            技术是冰冷的，但你们赋予它的设计与关怀，让它拥有了温度。
+                            感谢每一位守护者的努力，你们不仅是技术的掌控者，更是温暖的传递者！
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-5-completion">
+                    <div class="completion-icon">🤔</div>
+                    <div class="completion-title">第五关完成！</div>
+                    <div class="completion-message">您已完成课程总结与反思</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">🤔</div>
+                            <div>反思者</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：反思者</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-6">
+                        <div>
+                            <div class="badge-icon">🤔</div>
+                            <div>反思者</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 关卡6: 教学评价 -->
+            <div class="level-content" id="level-6">
+                <div class="completion-screen">
+                    <div class="evaluation-badge">
+                        <div>
+                            <div style="font-size: 40px; margin-bottom: 5px;">⭐</div>
+                            <div>教学评价</div>
+                        </div>
+                    </div>
+                    
+                    <h2>教学评价与反馈</h2>
+                    <p>请对本次课程的教学质量进行评价，帮助我们不断改进教学方法和内容</p>
+                    
+                    <div class="evaluation-form">
+                        <h3>教学评价表</h3>
+                        
+                        <div class="rating-container">
+                            <div class="rating-item">
+                                <div class="rating-label">教学内容设计</div>
+                                <div class="rating-stars" id="content-design-rating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                            </div>
+                            
+                            <div class="rating-item">
+                                <div class="rating-label">教学方法与指导</div>
+                                <div class="rating-stars" id="teaching-method-rating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                            </div>
+                            
+                            <div class="rating-item">
+                                <div class="rating-label">实践环节安排</div>
+                                <div class="rating-stars" id="practice-arrangement-rating">
+                                    <span class="star" data-value="1">★</span>
+                                    <span class="star" data-value="2">★</span>
+                                    <span class="star" data-value="3">★</span>
+                                    <span class="star" data-value="4">★</span>
+                                    <span class="star" data-value="5">★</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="feedback-section">
+                            <div class="feedback-title">详细反馈</div>
+                            
+                            <div class="feedback-item">
+                                <label class="feedback-label">您认为本课程的教学有哪些优点？</label>
+                                <textarea class="feedback-input" rows="3" id="teaching-advantages" placeholder="请分享您的看法..."></textarea>
+                            </div>
+                            
+                            <div class="feedback-item">
+                                <label class="feedback-label">您认为本课程的教学有哪些可以改进的地方？</label>
+                                <textarea class="feedback-input" rows="3" id="teaching-improvements" placeholder="请提出您的建议..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="check-item mt-4">
+                            <input type="checkbox" id="check6-1">
+                            <label for="check6-1">我已认真完成教学评价！</label>
+                        </div>
+                    </div>
+                    
+                    <div class="mission-card mt-4">
+                        <h4>感谢您的反馈！</h4>
+                        <p>您的评价将帮助我们不断改进教学内容与教学方法，为更多学生提供优质的学习体验。</p>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button class="btn btn-complete" onclick="restartGame()">重新开始挑战</button>
+                    </div>
+                </div>
+                
+                <!-- 过关确认 -->
+                <div class="level-completion" id="level-6-completion">
+                    <div class="completion-icon">📝</div>
+                    <div class="completion-title">第六关完成！</div>
+                    <div class="completion-message">您已完成教学评价与反馈</div>
+                    <div class="completion-badge-preview">
+                        <div>
+                            <div class="badge-icon">📝</div>
+                            <div>评价者</div>
+                        </div>
+                    </div>
+                    <p>已解锁勋章：评价者</p>
+                </div>
+                
+                <div class="badges-container">
+                    <div class="badge" id="badge-7">
+                        <div>
+                            <div class="badge-icon">📝</div>
+                            <div>评价者</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

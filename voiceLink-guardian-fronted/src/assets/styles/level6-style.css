@@ -1,0 +1,267 @@
+.level-content#level-6 {
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+#level-6 .completion-screen {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+#level-6 .evaluation-badge {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+#level-6 .evaluation-badge div {
+  text-align: center;
+  background-color: #fff3cd;
+  padding: 15px;
+  border-radius: 50%;
+  width: 120px;
+  height: 120px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#level-6 h2 {
+  text-align: center;
+  color: #343a40;
+  margin-bottom: 15px;
+  font-size: 24px;
+}
+
+#level-6 p {
+  text-align: center;
+  color: #6c757d;
+  margin-bottom: 30px;
+  font-size: 16px;
+}
+
+#level-6 .evaluation-form {
+  background-color: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+#level-6 .evaluation-form h3 {
+  color: #495057;
+  margin-bottom: 20px;
+  font-size: 20px;
+  border-bottom: 2px solid #e9ecef;
+  padding-bottom: 10px;
+}
+
+#level-6 .rating-container {
+  margin-bottom: 30px;
+}
+
+#level-6 .rating-item {
+  margin-bottom: 20px;
+}
+
+#level-6 .rating-label {
+  display: block;
+  margin-bottom: 10px;
+  font-weight: 500;
+  color: #495057;
+}
+
+#level-6 .rating-stars {
+  display: flex;
+  gap: 10px;
+}
+
+#level-6 .star {
+  font-size: 28px;
+  color: #ddd;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+#level-6 .star:hover,
+#level-6 .star.active {
+  color: #ffc107;
+}
+
+#level-6 .feedback-section {
+  margin-bottom: 25px;
+}
+
+#level-6 .feedback-title {
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #495057;
+  font-size: 18px;
+}
+
+#level-6 .feedback-item {
+  margin-bottom: 15px;
+}
+
+#level-6 .feedback-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #495057;
+  font-weight: 500;
+}
+
+#level-6 .feedback-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+  font-size: 15px;
+}
+
+#level-6 .feedback-input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+#level-6 .check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+#level-6 .check-item input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+}
+
+#level-6 .mission-card {
+  background-color: #e7f3ff;
+  padding: 15px;
+  border-radius: 6px;
+  border-left: 4px solid #2196F3;
+}
+
+#level-6 .mission-card h4 {
+  color: #0d47a1;
+  margin-bottom: 8px;
+  font-size: 16px;
+}
+
+#level-6 .mission-card p {
+  text-align: left;
+  margin-bottom: 0;
+  font-size: 14px;
+  color: #1565c0;
+}
+
+#level-6 .btn-complete {
+  display: block;
+  margin: 20px auto 0;
+  padding: 12px 24px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s;
+}
+
+#level-6 .btn-complete:hover {
+  background-color: #218838;
+}
+
+/* 过关确认界面 */
+#level-6 .level-completion {
+  text-align: center;
+  padding: 30px;
+  background-color: #d4edda;
+  border-radius: 8px;
+  margin-top: 30px;
+}
+
+#level-6 .completion-icon {
+  font-size: 50px;
+  margin-bottom: 15px;
+}
+
+#level-6 .completion-title {
+  font-size: 24px;
+  color: #155724;
+  margin-bottom: 10px;
+  font-weight: 600;
+}
+
+#level-6 .completion-message {
+  font-size: 16px;
+  color: #155724;
+  margin-bottom: 20px;
+}
+
+#level-6 .completion-badge-preview {
+  display: inline-block;
+  background-color: white;
+  padding: 15px;
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#level-6 .completion-badge-preview .badge-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+/* 勋章容器 */
+#level-6 .badges-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+#level-6 .badge {
+  background-color: #fff;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#level-6 .badge .badge-icon {
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+#level-6 .badge div {
+  text-align: center;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+  #level-6 .evaluation-badge div {
+    width: 100px;
+    height: 100px;
+  }
+  
+  #level-6 .star {
+    font-size: 24px;
+  }
+  
+  #level-6 .completion-badge-preview {
+    width: 80px;
+    height: 80px;
+  }
+}

@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>空巢老人安全管理系统</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Comic Sans MS', 'Segoe UI', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 900px;
+            animation: bounce 2s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header p {
+            color: #34495e;
+            font-size: 1.2rem;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            min-height: 600px;
+            position: relative;
+        }
+        
+        /* 房屋外部视图 */
+        .house-exterior {
+            padding: 30px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(to bottom, #87CEEB, #E0F7FA);
+        }
+        
+        .house-image {
+            width: 500px;
+            height: 380px;
+            position: relative;
+            margin-bottom: 30px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        
+        .house-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 15px;
+        }
+        
+        .house-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .door-overlay {
+            position: absolute;
+            bottom: 0px;
+            left: 128px;
+            width: 45px;
+            height: 37.5px;
+            background: rgba(139, 69, 19, 0.5);
+            border-radius: 3px 3px 0 0;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid rgba(139, 69, 19, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFD700;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .door-overlay:hover {
+            background: rgba(160, 82, 45, 0.7);
+            color: #FFF;
+        }
+        
+        .instruction {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            color: #2c3e50;
+            background: rgba(255,255,255,0.7);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* 房屋内部俯视图 */
+        .house-interior {
+            display: none;
+            height: 100%;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .floor-plan {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+        
+        .room {
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 20px;
+            text-align: center;
+            border: 3px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .room:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+        
+        .room i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #3498db;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .room-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        
+        .back-button:hover {
+            background: #2980b9;
+            transform: scale(1.1);
+        }
+        
+        /* 房间详情视图 */
+        .room-detail {
+            display: none;
+            height: 100%;
+            padding: 20px;
+            background: #f5f5f5;
+            position: relative;
+        }
+        
+        .room-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px dashed #3498db;
+        }
+        
+        .room-header h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+        }
+        
+        .room-header p {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-top: 10px;
+        }
+        
+        .room-content {
+            display: flex;
+            height: calc(100% - 150px);
+            gap: 20px;
+        }
+        
+        /* 侧边面板样式 */
+        .side-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        /* 房间图片容器 */
+        .room-image-container {
+            flex: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px solid #3498db;
+            padding: 10px;
+        }
+        
+        .room-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+        
+        /* 交互区域样式 */
+        .interaction-area {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            background: #e8f4f8;
+            border-radius: 15px;
+            border: 3px dashed #3498db;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            padding: 15px;
+            text-align: center;
+            height: 100px;
+        }
+        
+        .interaction-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .interaction-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 8px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .interaction-button:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .interaction-button i {
+            font-size: 1rem;
+        }
+        
+        /* 危险标记样式 */
+        .danger-arrow {
+            position: absolute;
+            width: 80px;
+            height: 80px;
+            z-index: 20;
+            display: none;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .danger-arrow::before {
+            content: '➤';
+            font-size: 60px;
+            color: #ff0000;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            display: block;
+            transform: rotate(-45deg);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .danger-explanation {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #ff0000;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        
+        .danger-explanation h3 {
+            color: #ff0000;
+            margin-bottom: 10px;
+            font-size: 1.3rem;
+        }
+        
+        .danger-explanation p {
+            color: #333;
+            line-height: 1.5;
+            font-size: 1rem;
+        }
+        
+        .danger-explanation ul {
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+        
+        .danger-explanation li {
+            color: #333;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+
+        .question-box {
+            background: #e3f2fd;
+            border: 2px solid #2196f3;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .question-box p {
+            color: #1565c0;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin: 0;
+        }
+        
+        /* 传感器选择区域 */
+        .sensor-options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+            width: 100%;
+        }
+        
+        .sensor-option {
+            width: 100%;
+            height: 80px;
+            background: white;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            transition: all 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            padding: 10px;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+        
+        .sensor-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            border-color: #3498db;
+        }
+        
+        .sensor-option i {
+            font-size: 2rem;
+            margin-bottom: 5px;
+            color: #3498db;
+        }
+        
+        .sensor-name {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .sensor-drop-zone {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border: 3px dashed #2ecc71;
+            border-radius: 15px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(46, 204, 113, 0.1);
+            z-index: 25;
+        }
+        
+        .success-message {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            z-index: 100;
+            text-align: center;
+            animation: pop 0.5s;
+        }
+        
+        @keyframes pop {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-home"></i> 空巢老人安全管理系统</h1>
+        <p>帮助教师引导学生了解居家安全隐患及解决方案</p>
+    </div>
+    
+    <div class="container">
+        <!-- 房屋外部视图 -->
+        <div class="house-exterior" id="houseExterior">
+            <div class="house-image">
+                <img src="https://img.tukuppt.com/png_preview/00/04/45/oVwPXJXJWr.jpg!/fw/780" alt="卡通房屋">
+                <div class="door-overlay" id="frontDoor">
+                    进入
+                </div>
+            </div>
+            <div class="instruction">
+                点击大门进入房屋内部，探索各个房间的安全隐患
+            </div>
+        </div>
+        
+        <!-- 房屋内部俯视图 -->
+        <div class="house-interior" id="houseInterior">
+            <button class="back-button" id="backToExterior">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <h2 style="text-align:center; margin-bottom:20px; color:#2c3e50;">房屋内部俯视图</h2>
+            <div class="floor-plan">
+                <div class="room" id="livingRoom">
+                    <i class="fas fa-couch"></i>
+                    <div class="room-name">客厅</div>
+                </div>
+                <div class="room" id="kitchen">
+                    <i class="fas fa-utensils"></i>
+                    <div class="room-name">厨房</div>
+                </div>
+                <div class="room" id="bathroom">
+                    <i class="fas fa-bath"></i>
+                    <div class="room-name">卫生间</div>
+                </div>
+                <div class="room" id="bedroom">
+                    <i class="fas fa-bed"></i>
+                    <div class="room-name">卧室</div>
+                </div>
+            </div>
+            <div class="instruction">
+                点击任意房间查看该区域的安全隐患及解决方案
+            </div>
+        </div>
+        
+        <!-- 客厅详情 -->
+        <div class="room-detail" id="livingRoomDetail">
+            <button class="back-button" id="backToInterior1">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="room-header">
+                <h2><i class="fas fa-couch"></i> 客厅安全分析</h2>
+                <p>"老人在客厅休息，最可能发生什么意外？"</p>
+            </div>
+            <div class="room-content">
+                <!-- 左侧面板 -->
+                <div class="side-panel" id="livingRoomLeftPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- 中间区域 - 客厅图片 -->
+                <div class="room-image-container">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/abf405d1ef0e4dcc8a8cf07e7370e4fepreview.png~tplv-a9rns2rl98-downsize.png?rcl=021762856001220fdbddc03001b0b280000000000000019584e9a&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079080008&x-signature=uLfRQ%2FLoXawrkZ4cx5%2Fyt1E%2BLlY%3D" alt="客厅安全分析" class="room-image">
+                    <!-- 红色箭头 -->
+                    <div class="danger-arrow" id="livingRoomDangerArrow1" style="top: 40%; left: 60%;"></div>
+                    <div class="danger-arrow" id="livingRoomDangerArrow2" style="top: 40%; left: 40%; display: none;"></div>
+                    <!-- 传感器放置区域 -->
+                    <div class="sensor-drop-zone" id="livingRoomDropZone1" style="top: 45%; left: 70%;"></div>
+                    <div class="sensor-drop-zone" id="livingRoomDropZone2" style="top: 45%; left: 30%; display: none;"></div>
+                </div>
+                
+                <!-- 右侧面板 -->
+                <div class="side-panel" id="livingRoomRightPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 底部交互区域 -->
+            <div class="interaction-area">
+                <h3>安全防护操作区</h3>
+                <p id="livingRoomInteractionText">点击按钮标记客厅中的危险区域</p>
+                <div class="interaction-buttons">
+                    <button class="interaction-button" id="livingRoomMarkDangerBtn">
+                        <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                    </button>
+                    <button class="interaction-button" id="livingRoomResetBtn">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 厨房详情 -->
+        <div class="room-detail" id="kitchenDetail">
+            <button class="back-button" id="backToInterior2">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="room-header">
+                <h2><i class="fas fa-utensils"></i> 厨房安全分析</h2>
+                <p>"厨房里有哪些容易被忽略的安全隐患？"</p>
+            </div>
+            <div class="room-content">
+                <!-- 左侧面板 -->
+                <div class="side-panel" id="kitchenLeftPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- 中间区域 - 厨房图片 -->
+                <div class="room-image-container">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/9de9fb40f47a408490d73f5a7947b732preview.png~tplv-a9rns2rl98-image.png?rcl=021762855675356fdbddc03001b0b280000000000000019c365c8&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079079682&x-signature=mia6SndAOKpPgQzkfyg3zCpeJws%3D" alt="厨房安全分析" class="room-image">
+                    <!-- 红色箭头 -->
+                    <div class="danger-arrow" id="kitchenDangerArrow1" style="top: 40%; left: 60%;"></div>
+                    <div class="danger-arrow" id="kitchenDangerArrow2" style="top: 40%; left: 40%; display: none;"></div>
+                    <!-- 传感器放置区域 -->
+                    <div class="sensor-drop-zone" id="kitchenDropZone1" style="top: 45%; left: 70%;"></div>
+                    <div class="sensor-drop-zone" id="kitchenDropZone2" style="top: 45%; left: 30%; display: none;"></div>
+                </div>
+                
+                <!-- 右侧面板 -->
+                <div class="side-panel" id="kitchenRightPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 底部交互区域 -->
+            <div class="interaction-area">
+                <h3>安全防护操作区</h3>
+                <p id="kitchenInteractionText">点击按钮标记厨房中的危险区域</p>
+                <div class="interaction-buttons">
+                    <button class="interaction-button" id="kitchenMarkDangerBtn">
+                        <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                    </button>
+                    <button class="interaction-button" id="kitchenResetBtn">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 卫生间详情 -->
+        <div class="room-detail" id="bathroomDetail">
+            <button class="back-button" id="backToInterior3">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="room-header">
+                <h2><i class="fas fa-bath"></i> 卫生间安全分析</h2>
+                <p>"卫生间是意外高发地，我们可以怎么预防？"</p>
+            </div>
+            <div class="room-content">
+                <!-- 左侧面板 -->
+                <div class="side-panel" id="bathroomLeftPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- 中间区域 - 卫生间图片 -->
+                <div class="room-image-container">
+                    <img src="https://p3-flow-imagex-sign.byteimg.com/ocean-cloud-tos/f02405fcc4624f728adc4b87214c6b03preview.png~tplv-a9rns2rl98-downsize.png?rcl=021762855888721fdbddc03001b0b280000000000000019bb8e69&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079079895&x-signature=6VhVXawz2ldXuD8e8erXLys30bI%3D" alt="卫生间安全分析" class="room-image">
+                    <!-- 红色箭头 -->
+                    <div class="danger-arrow" id="bathroomDangerArrow1" style="top: 40%; left: 60%;"></div>
+                    <div class="danger-arrow" id="bathroomDangerArrow2" style="top: 40%; left: 40%; display: none;"></div>
+                    <!-- 传感器放置区域 -->
+                    <div class="sensor-drop-zone" id="bathroomDropZone1" style="top: 45%; left: 70%;"></div>
+                    <div class="sensor-drop-zone" id="bathroomDropZone2" style="top: 45%; left: 30%; display: none;"></div>
+                </div>
+                
+                <!-- 右侧面板 -->
+                <div class="side-panel" id="bathroomRightPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 底部交互区域 -->
+            <div class="interaction-area">
+                <h3>安全防护操作区</h3>
+                <p id="bathroomInteractionText">点击按钮标记卫生间中的危险区域</p>
+                <div class="interaction-buttons">
+                    <button class="interaction-button" id="bathroomMarkDangerBtn">
+                        <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                    </button>
+                    <button class="interaction-button" id="bathroomResetBtn">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 卧室详情 -->
+        <div class="room-detail" id="bedroomDetail">
+            <button class="back-button" id="backToInterior4">
+                <i class="fas fa-arrow-left"></i>
+            </button>
+            <div class="room-header">
+                <h2><i class="fas fa-bed"></i> 卧室安全分析</h2>
+                <p>"在卧室，我们如何关注老人的夜间安全？"</p>
+            </div>
+            <div class="room-content">
+                <!-- 左侧面板 -->
+                <div class="side-panel" id="bedroomLeftPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+                
+                <!-- 中间区域 - 卧室图片 -->
+                <div class="room-image-container">
+                    <img src="https://p9-flow-imagex-sign.byteimg.com/ocean-cloud-tos/c8fbfc4e0b3143ce8b0d0ad5a62fba24preview.png~tplv-a9rns2rl98-downsize.png?rcl=021762854527124fdbddc03001b0b28000000000000001973f38d&rk3s=8e244e95&rrcfp=10c8fdaa&x-expires=2079078535&x-signature=I2ynZ1FexyLbpUd2K%2FV3FaFGaJA%3D" alt="卧室安全分析" class="room-image">
+                    <!-- 红色箭头 -->
+                    <div class="danger-arrow" id="bedroomDangerArrow1" style="top: 40%; left: 60%;"></div>
+                    <div class="danger-arrow" id="bedroomDangerArrow2" style="top: 40%; left: 40%; display: none;"></div>
+                    <!-- 传感器放置区域 -->
+                    <div class="sensor-drop-zone" id="bedroomDropZone1" style="top: 45%; left: 70%;"></div>
+                    <div class="sensor-drop-zone" id="bedroomDropZone2" style="top: 45%; left: 30%; display: none;"></div>
+                </div>
+                
+                <!-- 右侧面板 -->
+                <div class="side-panel" id="bedroomRightPanel">
+                    <!-- 内容将通过JavaScript动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 底部交互区域 -->
+            <div class="interaction-area">
+                <h3>安全防护操作区</h3>
+                <p id="bedroomInteractionText">点击按钮标记卧室中的危险区域</p>
+                <div class="interaction-buttons">
+                    <button class="interaction-button" id="bedroomMarkDangerBtn">
+                        <i class="fas fa-exclamation-triangle"></i> 标记危险区域
+                    </button>
+                    <button class="interaction-button" id="bedroomResetBtn">
+                        <i class="fas fa-redo"></i> 重置
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 成功消息 -->
+        <div class="success-message" id="successMessage">
+            <i class="fas fa-check-circle"></i><br>
+            成功安装传感器！
+        </div>
+    </div>
+
+    <script>
+        // 房间管理类
+        class RoomManager {
+            constructor(roomName) {
+                this.roomName = roomName;
+                this.currentDanger = 1;
+                this.sensorsPlaced = 0;
+                
+                // 获取DOM元素
+                this.markDangerBtn = document.getElementById(`${roomName}MarkDangerBtn`);
+                this.resetBtn = document.getElementById(`${roomName}ResetBtn`);
+                this.dangerArrow1 = document.getElementById(`${roomName}DangerArrow1`);
+                this.dangerArrow2 = document.getElementById(`${roomName}DangerArrow2`);
+                this.interactionText = document.getElementById(`${roomName}InteractionText`);
+                this.leftPanel = document.getElementById(`${roomName}LeftPanel`);
+                this.rightPanel = document.getElementById(`${roomName}RightPanel`);
+                this.dropZone1 = document.getElementById(`${roomName}DropZone1`);
+                this.dropZone2 = document.getElementById(`${roomName}DropZone2`);
+                
+                // 传感器数据
+                this.danger1Sensors = this.getDanger1Sensors();
+                this.danger2Sensors = this.getDanger2Sensors();
+                
+                // 绑定事件
+                this.bindEvents();
+            }
+            
+            getDanger1Sensors() {
+                // 每个房间的第一个危险场景传感器
+                const sensors = {
+                    'livingRoom': [
+                        { name: '温度传感器', icon: 'fas fa-thermometer-half', correct: true },
+                        { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                        { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                    ],
+                    'kitchen': [
+                        // 厨房第一个危险区域：燃气泄漏
+                        { name: '燃气传感器', icon: 'fas fa-fire', correct: true },
+                        { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                        { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                    ],
+                    'bathroom': [
+                        { name: '水浸传感器', icon: 'fas fa-tint', correct: true },
+                        { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                        { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                    ],
+                    'bedroom': [
+                        { name: '智能夜灯', icon: 'fas fa-lightbulb', correct: true },
+                        { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                        { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                    ]
+                };
+                return sensors[this.roomName] || [];
+            }
+            
+            getDanger2Sensors() {
+                // 每个房间的第二个危险场景传感器
+                const sensors = {
+                    'livingRoom': [
+                        { name: '智能摄像头', icon: 'fas fa-video', correct: true },
+                        { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                        { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                    ],
+                    'kitchen': [
+                        // 厨房第二个危险区域：忘记关火导致干烧 - 使用火焰传感器
+                        { name: '火焰传感器', icon: 'fas fa-fire', correct: true },
+                        { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                        { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                    ],
+                    'bathroom': [
+                        { name: '电压传感器', icon: 'fas fa-bolt', correct: true },
+                        { name: '指纹传感器', icon: 'fas fa-fingerprint', correct: false },
+                        { name: '声音传感器', icon: 'fas fa-volume-up', correct: false }
+                    ],
+                    'bedroom': [
+                        { name: '压力床垫传感器', icon: 'fas fa-bed', correct: true },
+                        { name: '土壤湿度传感器', icon: 'fas fa-seedling', correct: false },
+                        { name: '颜色传感器', icon: 'fas fa-palette', correct: false }
+                    ]
+                };
+                return sensors[this.roomName] || [];
+            }
+            
+            bindEvents() {
+                this.markDangerBtn.addEventListener('click', () => this.markDanger());
+                this.resetBtn.addEventListener('click', () => this.reset());
+                
+                // 设置拖放区域
+                [this.dropZone1, this.dropZone2].forEach(zone => {
+                    zone.addEventListener('dragover', (e) => {
+                        e.preventDefault();
+                        zone.style.border = '3px solid #3498db';
+                        zone.style.background = 'rgba(52, 152, 219, 0.2)';
+                    });
+                    
+                    zone.addEventListener('dragleave', () => {
+                        zone.style.border = '3px dashed #2ecc71';
+                        zone.style.background = 'rgba(46, 204, 113, 0.1)';
+                    });
+                    
+                    zone.addEventListener('drop', (e) => this.handleDrop(e, zone));
+                });
+            }
+            
+            markDanger() {
+                if (this.currentDanger === 1) {
+                    // 显示第一个危险区域
+                    this.dangerArrow1.style.display = 'block';
+                    this.dropZone1.style.display = 'flex';
+                    this.dropZone1.innerHTML = '';
+                    
+                    // 显示危险解释和传感器选择
+                    this.showDangerExplanation(this.rightPanel, 1);
+                    this.showSensorSelection(this.leftPanel, 1);
+                    
+                    // 更改按钮文本
+                    this.markDangerBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 标记下一个危险区域';
+                    this.currentDanger = 2;
+                } else if (this.currentDanger === 2) {
+                    // 清除第一个危险区域的内容
+                    this.leftPanel.innerHTML = '';
+                    this.rightPanel.innerHTML = '';
+                    
+                    // 显示第二个危险区域
+                    this.dangerArrow2.style.display = 'block';
+                    this.dropZone2.style.display = 'flex';
+                    this.dropZone2.innerHTML = '';
+                    
+                    // 显示危险解释和传感器选择
+                    this.showDangerExplanation(this.leftPanel, 2);
+                    this.showSensorSelection(this.rightPanel, 2);
+                    
+                    // 更改按钮文本
+                    this.markDangerBtn.innerHTML = '<i class="fas fa-check"></i> 完成';
+                    this.currentDanger = 3;
+                } else {
+                    // 完成所有危险标记
+                    this.markDangerBtn.disabled = true;
+                    this.interactionText.textContent = '所有危险区域已标记完成！';
+                }
+            }
+            
+            reset() {
+                // 隐藏所有危险标记
+                this.dangerArrow1.style.display = 'none';
+                this.dangerArrow2.style.display = 'none';
+                this.dropZone1.style.display = 'none';
+                this.dropZone2.style.display = 'none';
+                
+                // 清空传感器放置区域内容
+                this.dropZone1.innerHTML = '';
+                this.dropZone2.innerHTML = '';
+                
+                // 清除面板内容
+                this.leftPanel.innerHTML = '';
+                this.rightPanel.innerHTML = '';
+                
+                // 重置按钮文本
+                this.markDangerBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> 标记危险区域';
+                this.markDangerBtn.disabled = false;
+                
+                // 重置状态
+                this.currentDanger = 1;
+                this.sensorsPlaced = 0;
+                this.interactionText.textContent = `点击按钮标记${this.getRoomChineseName()}中的危险区域`;
+            }
+            
+            getRoomChineseName() {
+                const names = {
+                    'livingRoom': '客厅',
+                    'kitchen': '厨房', 
+                    'bathroom': '卫生间',
+                    'bedroom': '卧室'
+                };
+                return names[this.roomName] || '房间';
+            }
+            
+            showDangerExplanation(panel, dangerNumber) {
+                const dangerExplanation = document.createElement('div');
+                dangerExplanation.className = 'danger-explanation';
+                
+                const dangers = {
+                    'livingRoom': {
+                        1: {
+                            title: '防止烫伤危险',
+                            description: '桌子上的热水壶存在严重烫伤风险：',
+                            risks: [
+                                '老人视力不好，容易碰倒热水壶',
+                                '记忆力减退可能忘记关火',
+                                '反应迟钝，烫伤后无法及时处理'
+                            ]
+                        },
+                        2: {
+                            title: '防止摔倒危险', 
+                            description: '沙发区域存在摔倒风险：',
+                            risks: [
+                                '老人起身时容易失去平衡',
+                                '地面湿滑或不平整',
+                                '反应迟钝，摔倒后无法及时求助'
+                            ]
+                        }
+                    },
+                    'kitchen': {
+                        1: {
+                            title: '防止燃气泄漏',
+                            description: '燃气灶存在泄漏风险：',
+                            risks: [
+                                '老人可能忘记关闭燃气阀门',
+                                '嗅觉减退无法及时发现泄漏',
+                                '记忆力差可能忘记正在使用燃气'
+                            ]
+                        },
+                        2: {
+                            title: '防止干烧危险',
+                            description: '忘记关火导致干烧存在火灾风险：',
+                            risks: [
+                                '老人记忆力减退容易忘记关火',
+                                '干烧可能导致锅具烧毁引发火灾',
+                                '反应迟钝无法及时发现危险'
+                            ]
+                        }
+                    },
+                    'bathroom': {
+                        1: {
+                            title: '防止滑倒危险',
+                            description: '卫生间地面湿滑存在风险：',
+                            risks: [
+                                '地面容易积水，老人容易滑倒',
+                                '起身时容易失去平衡',
+                                '反应迟钝，摔倒后无法及时求助'
+                            ]
+                        },
+                        2: {
+                            title: '防止漏电危险',
+                            description: '卫生间电器使用存在漏电风险：',
+                            risks: [
+                                '老人可能使用湿手接触电器',
+                                '电器老化可能导致漏电',
+                                '对电击危险认识不足'
+                            ]
+                        }
+                    },
+                    'bedroom': {
+                        1: {
+                            title: '防止夜间摔倒',
+                            description: '夜间起床存在摔倒风险：',
+                            risks: [
+                                '老人夜间起床时意识不清',
+                                '光线不足容易绊倒',
+                                '反应迟钝，摔倒后无法及时求助'
+                            ]
+                        },
+                        2: {
+                            title: '防止突发疾病',
+                            description: '夜间睡眠存在健康风险：',
+                            risks: [
+                                '老人可能突发疾病无法求助',
+                                '睡眠中可能出现呼吸问题',
+                                '慢性病可能在夜间发作'
+                            ]
+                        }
+                    }
+                };
+                
+                const danger = dangers[this.roomName][dangerNumber];
+                
+                dangerExplanation.innerHTML = `
+                    <h3><i class="fas fa-exclamation-triangle"></i> ${danger.title}</h3>
+                    <p>${danger.description}</p>
+                    <ul>
+                        ${danger.risks.map(risk => `<li>${risk}</li>`).join('')}
+                    </ul>
+                    <div class="question-box">
+                        <p>💡 思考：我们可以选择什么传感器来预防这种危险呢？</p>
+                    </div>
+                `;
+                
+                panel.appendChild(dangerExplanation);
+            }
+            
+            showSensorSelection(panel, dangerNumber) {
+                const sensorTitle = document.createElement('h4');
+                sensorTitle.textContent = '请选择合适的传感器拖动到危险区域：';
+                sensorTitle.style.marginBottom = '15px';
+                sensorTitle.style.color = '#2c3e50';
+                panel.appendChild(sensorTitle);
+                
+                const sensorOptions = document.createElement('div');
+                sensorOptions.className = 'sensor-options';
+                panel.appendChild(sensorOptions);
+                
+                // 生成传感器选项
+                const sensors = dangerNumber === 1 ? this.danger1Sensors : this.danger2Sensors;
+                this.generateSensorOptions(sensorOptions, sensors);
+            }
+            
+            generateSensorOptions(container, sensors) {
+                // 随机排序传感器
+                const shuffledSensors = [...sensors].sort(() => Math.random() - 0.5);
+                
+                shuffledSensors.forEach(sensor => {
+                    const sensorElement = document.createElement('div');
+                    sensorElement.className = 'sensor-option';
+                    sensorElement.draggable = true;
+                    sensorElement.innerHTML = `
+                        <i class="${sensor.icon}"></i>
+                        <div class="sensor-name">${sensor.name}</div>
+                    `;
+                    
+                    // 添加拖拽事件
+                    sensorElement.addEventListener('dragstart', function(e) {
+                        e.dataTransfer.setData('text/plain', sensor.name);
+                        e.dataTransfer.setData('correct', sensor.correct.toString());
+                    });
+                    
+                    container.appendChild(sensorElement);
+                });
+            }
+            
+            handleDrop(e, zone) {
+                e.preventDefault();
+                zone.style.border = '3px dashed #2ecc71';
+                zone.style.background = 'rgba(46, 204, 113, 0.1)';
+                
+                const sensorName = e.dataTransfer.getData('text/plain');
+                const isCorrect = e.dataTransfer.getData('correct') === 'true';
+                
+                if (isCorrect) {
+                    // 正确选择
+                    zone.innerHTML = `
+                        <i class="fas fa-check-circle" style="font-size: 2rem; color: #2ecc71;"></i>
+                        <div style="margin-top: 10px; font-weight: bold;">${sensorName}</div>
+                    `;
+                    
+                    // 显示成功消息
+                    this.showSuccessMessage();
+                    
+                    this.sensorsPlaced++;
+                    
+                    // 检查是否所有传感器都已放置
+                    if (this.sensorsPlaced === 2) {
+                        this.interactionText.textContent = '恭喜！所有传感器已正确安装！';
+                    }
+                } else {
+                    // 错误选择
+                    zone.innerHTML = `
+                        <i class="fas fa-times-circle" style="font-size: 2rem; color: #e74c3c;"></i>
+                        <div style="margin-top: 10px; font-weight: bold;">${sensorName}</div>
+                    `;
+                    
+                    // 短暂显示错误状态
+                    zone.style.border = '3px solid #e74c3c';
+                    zone.style.background = 'rgba(231, 76, 60, 0.2)';
+                    
+                    setTimeout(() => {
+                        zone.innerHTML = '';
+                        zone.style.border = '3px dashed #2ecc71';
+                        zone.style.background = 'rgba(46, 204, 113, 0.1)';
+                    }, 1500);
+                }
+            }
+            
+            showSuccessMessage() {
+                const successMessage = document.getElementById('successMessage');
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 2000);
+            }
+        }
+
+        // 初始化房间管理器
+        const livingRoomManager = new RoomManager('livingRoom');
+        const kitchenManager = new RoomManager('kitchen');
+        const bathroomManager = new RoomManager('bathroom');
+        const bedroomManager = new RoomManager('bedroom');
+
+        // 页面导航逻辑
+        const houseExterior = document.getElementById('houseExterior');
+        const houseInterior = document.getElementById('houseInterior');
+        const frontDoor = document.getElementById('frontDoor');
+        const backToExterior = document.getElementById('backToExterior');
+        
+        const livingRoom = document.getElementById('livingRoom');
+        const kitchen = document.getElementById('kitchen');
+        const bathroom = document.getElementById('bathroom');
+        const bedroom = document.getElementById('bedroom');
+        
+        const livingRoomDetail = document.getElementById('livingRoomDetail');
+        const kitchenDetail = document.getElementById('kitchenDetail');
+        const bathroomDetail = document.getElementById('bathroomDetail');
+        const bedroomDetail = document.getElementById('bedroomDetail');
+        
+        const backToInterior1 = document.getElementById('backToInterior1');
+        const backToInterior2 = document.getElementById('backToInterior2');
+        const backToInterior3 = document.getElementById('backToInterior3');
+        const backToInterior4 = document.getElementById('backToInterior4');
+
+        // 事件监听器
+        frontDoor.addEventListener('click', function() {
+            houseExterior.style.display = 'none';
+            houseInterior.style.display = 'block';
+        });
+        
+        backToExterior.addEventListener('click', function() {
+            houseInterior.style.display = 'none';
+            houseExterior.style.display = 'flex';
+        });
+        
+        livingRoom.addEventListener('click', function() {
+            houseInterior.style.display = 'none';
+            livingRoomDetail.style.display = 'block';
+            livingRoomManager.reset();
+        });
+        
+        kitchen.addEventListener('click', function() {
+            houseInterior.style.display = 'none';
+            kitchenDetail.style.display = 'block';
+            kitchenManager.reset();
+        });
+        
+        bathroom.addEventListener('click', function() {
+            houseInterior.style.display = 'none';
+            bathroomDetail.style.display = 'block';
+            bathroomManager.reset();
+        });
+        
+        bedroom.addEventListener('click', function() {
+            houseInterior.style.display = 'none';
+            bedroomDetail.style.display = 'block';
+            bedroomManager.reset();
+        });
+        
+        backToInterior1.addEventListener('click', function() {
+            livingRoomDetail.style.display = 'none';
+            houseInterior.style.display = 'block';
+        });
+        
+        backToInterior2.addEventListener('click', function() {
+            kitchenDetail.style.display = 'none';
+            houseInterior.style.display = 'block';
+        });
+        
+        backToInterior3.addEventListener('click', function() {
+            bathroomDetail.style.display = 'none';
+            houseInterior.style.display = 'block';
+        });
+        
+        backToInterior4.addEventListener('click', function() {
+            bedroomDetail.style.display = 'none';
+            houseInterior.style.display = 'block';
+        });
+    </script>
+</body>
+</html>
