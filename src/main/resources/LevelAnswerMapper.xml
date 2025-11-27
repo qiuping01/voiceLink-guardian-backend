@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="generator.mapper.LevelAnswerMapper">
+
+    <resultMap id="BaseResultMap" type="com.ping.voicelinkguardianbackend.model.entity.LevelAnswer">
+            <id property="id" column="id" />
+            <result property="userId" column="userId" />
+            <result property="groupName" column="groupName" />
+            <result property="firstDilemma" column="firstDilemma" />
+            <result property="secondScene" column="secondScene" />
+            <result property="secondRisk" column="secondRisk" />
+            <result property="secondDesign1" column="secondDesign1" />
+            <result property="secondDesign2" column="secondDesign2" />
+            <result property="secondDesign3" column="secondDesign3" />
+            <result property="secondDesign4" column="secondDesign4" />
+            <result property="thirdChallenge" column="thirdChallenge" />
+            <result property="fourthScene" column="fourthScene" />
+            <result property="fourthAchieve" column="fourthAchieve" />
+            <result property="fourthExtra" column="fourthExtra" />
+            <result property="fourthProblem" column="fourthProblem" />
+            <result property="fourthSolution" column="fourthSolution" />
+            <result property="fifthComment1" column="fifthComment1" />
+            <result property="fifthComment2" column="fifthComment2" />
+            <result property="fifthComment3" column="fifthComment3" />
+            <result property="fifthComment4" column="fifthComment4" />
+            <result property="fifthComment5" column="fifthComment5" />
+            <result property="fifthComment6" column="fifthComment6" />
+            <result property="createTime" column="createTime" />
+            <result property="updateTime" column="updateTime" />
+            <result property="isDelete" column="isDelete" />
+            <result property="sixthEduComment1" column="sixthEduComment1" />
+            <result property="sixthEduComment2" column="sixthEduComment2" />
+            <result property="sixthEduComment3" column="sixthEduComment3" />
+            <result property="sixthFeedback1" column="sixthFeedback1" />
+            <result property="sixthFeedback2" column="sixthFeedback2" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,groupName,firstDilemma,secondScene,secondRisk,
+        secondDesign1,secondDesign2,secondDesign3,secondDesign4,thirdChallenge,
+        fourthScene,fourthAchieve,fourthExtra,fourthProblem,fourthSolution,
+        fifthComment1,fifthComment2,fifthComment3,fifthComment4,fifthComment5,
+        fifthComment6,createTime,updateTime,isDelete,sixthEduComment1,
+        sixthEduComment2,sixthEduComment3,sixthFeedback1,sixthFeedback2
+    </sql>
+</mapper>

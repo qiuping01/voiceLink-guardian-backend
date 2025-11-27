@@ -98,6 +98,20 @@ public class UserProgressServiceImpl extends ServiceImpl<UserProgressMapper, Use
         return null;
     }
 
+    /**
+     * 用户登出时设置当前关卡进度为 1
+     *
+     * @param userId
+     * @param groupName
+     * @return
+     */
+    @Override
+    public boolean setCurrentLevelForOne(Long userId, String groupName) {
+        UserProgress progress = getOrCreateProgress(userId,  groupName);
+        progress.setCurrentLevel(1);
+        userProgressMapper.updateById(progress);
+        return true;
+    }
 }
 
 

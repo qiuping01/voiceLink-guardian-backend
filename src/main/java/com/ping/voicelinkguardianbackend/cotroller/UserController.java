@@ -6,14 +6,13 @@ import com.ping.voicelinkguardianbackend.common.ResultUtils;
 import com.ping.voicelinkguardianbackend.exception.ErrorCode;
 import com.ping.voicelinkguardianbackend.exception.ThrowUtils;
 import com.ping.voicelinkguardianbackend.mapper.UserMapper;
-import com.ping.voicelinkguardianbackend.model.dto.DesignCenterRequest;
-import com.ping.voicelinkguardianbackend.model.dto.UserLoginRequest;
-import com.ping.voicelinkguardianbackend.model.dto.UserRegisterRequest;
+import com.ping.voicelinkguardianbackend.model.dto.*;
 import com.ping.voicelinkguardianbackend.model.entity.User;
 import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.ping.voicelinkguardianbackend.model.vo.LoginUserVO;
 import com.ping.voicelinkguardianbackend.model.vo.UserProgressVO;
 import com.ping.voicelinkguardianbackend.service.DesignCenterService;
+import com.ping.voicelinkguardianbackend.service.LevelAnswerService;
 import com.ping.voicelinkguardianbackend.service.UserProgressService;
 import com.ping.voicelinkguardianbackend.service.UserService;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +38,9 @@ public class UserController {
 
     @Resource
     private DesignCenterService designCenterService;
+
+    @Resource
+    private LevelAnswerService levelAnswerService;
 
     /**
      * 用户注册
@@ -75,7 +77,7 @@ public class UserController {
         queryWrapper.eq("groupName", userAccount);
         User user = userMapper.selectOne(queryWrapper);
         userProgressService.getOrCreateProgress(user.getId(),userAccount);
-        designCenterService.getOrCreateDesignCenter(user.getId(), userAccount);
+        levelAnswerService.getOrCreateLevelAnswer(user.getId(),userAccount);
         // 5. 返回成功响应
         return ResultUtils.success(loginUserVO);
     }
@@ -140,6 +142,10 @@ public class UserController {
     @PostMapping("/logout")
     public BaseResponse<Boolean> userLogout(HttpServletRequest request) {
         ThrowUtils.throwIf(request == null, ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        userProgressService.setCurrentLevelForOne(userId, groupName);
         boolean result = userService.userLogout(request);
         return ResultUtils.success(result);
     }
@@ -161,4 +167,81 @@ public class UserController {
         return ResultUtils.success(result);
     }
 
+    @PostMapping("/level1")
+    public BaseResponse<Boolean> writeLevel1(@RequestBody FirstLevelRequest firstLevelRequest,
+                                             HttpServletRequest request) {
+        ThrowUtils.throwIf(firstLevelRequest == null,
+                ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        boolean result = levelAnswerService.writeFirstAnswer(userId, groupName, firstLevelRequest);
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("/level2")
+    public BaseResponse<Boolean> writeLevel2(@RequestBody SecondLevelRequest secondLevelRequest
+            ,HttpServletRequest request) {
+        ThrowUtils.throwIf(secondLevelRequest == null,
+                ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        boolean result = levelAnswerService.writeSecondAnswer(userId, groupName, secondLevelRequest);
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("/level3")
+    public BaseResponse<Boolean> writeLevel3(@RequestBody ThirdLevelRequest thirdLevelRequest
+                                             ,HttpServletRequest request) {
+        ThrowUtils.throwIf(thirdLevelRequest == null,
+                ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        boolean result = levelAnswerService.writeThirdAnswer(userId, groupName, thirdLevelRequest);
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("/level4")
+    public BaseResponse<Boolean> writeLevel4(@RequestBody FourthLevelRequest fourthLevelRequest
+            ,HttpServletRequest request) {
+        ThrowUtils.throwIf(fourthLevelRequest == null,
+                ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        boolean result = levelAnswerService.writeFourthAnswer(userId, groupName, fourthLevelRequest);
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("/level5")
+    public BaseResponse<Boolean> writeLevel5(@RequestBody FifthLevelRequest fifthLevelRequest
+            ,HttpServletRequest request) {
+        ThrowUtils.throwIf(fifthLevelRequest == null,
+                ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        boolean result = levelAnswerService.writeFifthAnswer(userId, groupName, fifthLevelRequest);
+        return ResultUtils.success(result);
+    }
+
+    @PostMapping("/level6")
+    public BaseResponse<Boolean> writeLevel6(@RequestBody SixthLevelRequest sixthLevelRequest
+            ,HttpServletRequest request) {
+        ThrowUtils.throwIf(sixthLevelRequest == null,
+                ErrorCode.PARAMS_ERROR);
+        User loginUser = userService.getLoginUser(request);
+        ThrowUtils.throwIf(loginUser == null, ErrorCode.PARAMS_ERROR);
+        Long userId = loginUser.getId();
+        String groupName = loginUser.getGroupName();
+        boolean result = levelAnswerService.writeSixthAnswer(userId, groupName, sixthLevelRequest);
+        return ResultUtils.success(result);
+    }
 }

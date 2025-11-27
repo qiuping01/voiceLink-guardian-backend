@@ -44,4 +44,13 @@ public interface UserProgressService extends IService<UserProgress> {
      */
     List<Map<String,Object>> getAllGroupProgress();
 
+    /**
+     * 用户登出时设置当前关卡进度为 1
+     *
+     * @param userId
+     * @param groupName
+     * @return
+     */
+    boolean setCurrentLevelForOne(Long userId, String groupName);
+
 }

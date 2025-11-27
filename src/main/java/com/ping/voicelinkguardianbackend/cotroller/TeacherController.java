@@ -5,13 +5,13 @@ import com.ping.voicelinkguardianbackend.common.ResultUtils;
 import com.ping.voicelinkguardianbackend.exception.BusinessException;
 import com.ping.voicelinkguardianbackend.exception.ErrorCode;
 import com.ping.voicelinkguardianbackend.exception.ThrowUtils;
-import com.ping.voicelinkguardianbackend.model.entity.DesignCenter;
+import com.ping.voicelinkguardianbackend.model.entity.LevelAnswer;
 import com.ping.voicelinkguardianbackend.model.entity.User;
 import com.ping.voicelinkguardianbackend.model.entity.UserProgress;
 import com.ping.voicelinkguardianbackend.model.enums.UserRoleEnum;
-import com.ping.voicelinkguardianbackend.model.vo.DesignCenterVO;
+import com.ping.voicelinkguardianbackend.model.vo.LevelAnswerVO;
 import com.ping.voicelinkguardianbackend.model.vo.UserProgressVO;
-import com.ping.voicelinkguardianbackend.service.DesignCenterService;
+import com.ping.voicelinkguardianbackend.service.LevelAnswerService;
 import com.ping.voicelinkguardianbackend.service.UserProgressService;
 import com.ping.voicelinkguardianbackend.service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +37,7 @@ public class TeacherController {
     private UserService userService;
 
     @Resource
-    private DesignCenterService designCenterService;
+    private LevelAnswerService levelAnswerService;
 
     /**
      * 获取所有用户进度列表
@@ -56,16 +56,16 @@ public class TeacherController {
         return ResultUtils.success(progressVOList);
     }
 
-    @GetMapping("/all-design")
-    public BaseResponse<List<DesignCenterVO>> getAllUserDesign(HttpServletRequest request) {
+    @GetMapping("/all-answer")
+    public BaseResponse<List<LevelAnswerVO>> getAllUserAnswer(HttpServletRequest request) {
         User loginUser = userService.getLoginUser(request);
         String userRole = loginUser.getUserRole();
         ThrowUtils.throwIf(!UserRoleEnum.ADMIN.getValue().equals(userRole), ErrorCode.NO_AUTH_ERROR);
         // 1. 获取所有用户设计列表
-        List<DesignCenter> designCenterList = designCenterService.list();
+        List<LevelAnswer> levelAnswerList = levelAnswerService.list();
         // 2. 转换为脱敏的VO列表
-        List<DesignCenterVO> designCenterVOList = designCenterService.getDesignCenterVOList(designCenterList);
-        return ResultUtils.success(designCenterVOList);
+        List<LevelAnswerVO> levelAnswerVOList = levelAnswerService.getLevelAnswerVOList(levelAnswerList);
+        return ResultUtils.success(levelAnswerVOList);
     }
 
     /**
@@ -77,7 +77,7 @@ public class TeacherController {
         String userRole = loginUser.getUserRole();
         ThrowUtils.throwIf(!UserRoleEnum.ADMIN.getValue().equals(userRole), ErrorCode.NO_AUTH_ERROR);
         boolean remove = userProgressService.remove(null);
-        boolean remove1 = designCenterService.remove(null);
+        boolean remove1 = levelAnswerService.remove(null);
         ThrowUtils.throwIf(!remove, new BusinessException(ErrorCode.SYSTEM_ERROR));
         ThrowUtils.throwIf(!remove1, new BusinessException(ErrorCode.SYSTEM_ERROR));
         return ResultUtils.success(true);
